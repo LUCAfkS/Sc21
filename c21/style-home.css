@@ -1,0 +1,112 @@
+body,
+header {
+    font-family: monospace;
+    margin: 0%;
+    padding: 0%;
+}
+
+a {
+    text-decoration: none;
+
+}
+
+body {
+    color: aliceblue;
+    background-color: black;
+}
+
+nav div ul,
+h1 {
+    position: relative;
+    top: 13px;
+}
+
+h1 {
+    position: relative;
+    left: 10px;
+}
+
+nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: gray;
+    margin: 0;
+    position: relative;
+    bottom: 26px;
+}
+
+nav div ul {
+    display: flex;
+    flex-direction: row;
+}
+
+nav div ul li {
+    position: relative;
+    list-style: none;
+    border-left: 2px solid rgba(54, 54, 54, 0.295);
+    padding: 10px;
+}
+
+#descricao p {
+    margin: 15px 15px 60px;
+    padding: 30px;
+    background-color: blue;
+}
+
+#regras {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+
+
+}
+
+#regras p {
+    width: 80px;
+    margin-right: 15px;
+    padding: 15px;
+    position: relative;
+    overflow-wrap: break-word;
+    text-align: left;
+    height: 150px;
+    width: 180px;
+
+    background-color: blue;
+}
+
+#playbottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 21px;
+    margin-left: 21px;
+    margin-bottom: 40px;
+}
+
+#button {
+    width: 135px;
+    height: 45px;
+    color: aliceblue;
+    background-color: black;
+    border: 2px solid white;
+    border-radius: 15px 2px;
+    font-size: medium;
+    transition: transform 0.3s ease, border-radius 0.3s ease;
+}
+
+#button:hover {
+    transform: scale(1.1);
+    border-radius: 2px 15px;
+}
+
+label {
+    font-size: 34px;
+    margin-left: 15px;
+
+    position: relative;
+    bottom: 5px;
+    right: 5px;
+}

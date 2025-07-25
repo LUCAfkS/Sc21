@@ -1,0 +1,54 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    background-color: green;
+}
+
+#interaction{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+    position: relative;
+    top: 5ch;
+
+}
+#table{
+    margin: 15px;
+    width: 750px;
+    height: 500px;
+    background-color: rgb(58, 207, 58);
+    border-radius: 11px;
+    
+}
+#table h3{
+    font-size: 16px;
+    text-align: center;
+    color: rgb(39, 9, 121);
+    background-color: aquamarine;
+    border-radius: 11px 2px;
+    height: 21px;
+}
+#inventario{
+    margin: 15px;
+    width: 250px;
+    height: 500px;
+    background-color: rgb(58, 207, 58);
+    border-radius: 11px;
+    
+}
+#inventario h3{
+    font-size: 16px;
+    text-align: center;
+    color: rgb(39, 9, 121);
+    background-color: aquamarine;
+    border-radius: 11px 2px;
+    height: 21px;
+
+    
+    
+
+}

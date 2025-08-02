@@ -7,24 +7,44 @@ body {
     background-color: green;
 }
 
-#interaction{
+#interaction {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    
+
     position: relative;
     top: 5ch;
 
 }
-#table{
+
+#table {
     margin: 15px;
     width: 750px;
     height: 500px;
     background-color: rgb(58, 207, 58);
     border-radius: 11px;
+
     
 }
-#table h3{
+#mesa-cartas{
+        width: auto;
+        height: auto;
+        display: grid;
+        grid-template-columns: repeat(6,36px);
+        grid-template-rows: 65px 70px 20px 70px 33px;
+        grid-template-areas: 
+        "p11 p12 p13 p14 p15 p16" 
+        ""
+        "Baralho contador"
+        ""
+        "p21 p22 p23 p24 p25 p26";
+        justify-content: center;
+        margin: 24px;
+        gap: 6px;
+    
+    }
+
+#table h3 {
     font-size: 16px;
     text-align: center;
     color: rgb(39, 9, 121);
@@ -32,23 +52,163 @@ body {
     border-radius: 11px 2px;
     height: 21px;
 }
-#inventario{
+
+#inventario {
+    /* display: flex;
+    flex-direction: column;
+    justify-content: space-between; */
+    display: grid;
+    grid-template-rows: 0.2fr 2fr 2fr;
+    grid-template-areas:
+        "cabecario"
+        "cartas"
+        "descricao";
+
     margin: 15px;
     width: 250px;
     height: 500px;
     background-color: rgb(58, 207, 58);
     border-radius: 11px;
-    
+
 }
-#inventario h3{
+
+#inventario h3 {
+    grid-area: cabecario;
+
     font-size: 16px;
     text-align: center;
     color: rgb(39, 9, 121);
     background-color: aquamarine;
     border-radius: 11px 2px;
     height: 21px;
+}
 
-    
-    
+#descrição_carta {
+    height: auto;
+    border-radius: 0px 0px 11px 11px;
+    color: aliceblue;
+    background-color: rgba(0, 0, 0, 0.5);
 
+
+}
+
+#cartas_especiais {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-self: center;
+    gap: 12px;
+
+    /* width: auto; */
+    margin: 12px;
+
+    overflow-y: scroll;
+
+}
+
+.carta_especial {
+    width: 100px;
+    height: 100px;
+    background-color: brown;
+}
+
+#descrição_carta p {
+    grid-area: descricao;
+    padding: 6px;
+}
+
+#cartas_especiais::-webkit-scrollbar {
+    background-color: transparent;
+    width: 0;
+}
+
+.p2-carteira{
+    border: 2px solid white;
+    border-radius: 3px;
+    background-color: transparent;
+    width: 35px;
+    height: 65px;
+    grid-row: 6;
+}
+.p1-carteira{
+    border: 2px solid white;
+    border-radius: 3px;
+    background-color: transparent;
+    width: 35px;
+    height: 65px;
+    grid-row: 1;
+}
+#baralho{
+    border: 2px solid rgba(224, 13, 13, 0.8);
+    border-radius: 3px;
+    background-color: transparent;
+    width: 35px;
+    height: 65px;
+    grid-column: 3;
+    grid-row: 3;
+}
+#contador_d{
+    display: flex;
+    flex-direction: column;
+    border: 2px solid white;
+    border-radius: 3px;
+    background-color: transparent;
+    width: 50px;
+    height: 65px;
+    grid-column: 4;
+    grid-row: 3;
+}
+
+#ct1{
+    color: rgb(226, 34, 34);
+    background-color: black;
+    border-bottom: 2px solid white;
+    width: 50px;
+    height: 32.5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center ;
+    text-align: center;
+}
+#vida1{
+    color: rgb(19, 134, 235);
+    background-color: black;
+    width: 50px;
+    height: 32.5px;
+    grid-column: 6;
+    grid-row: 5;
+    border: 2px solid white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center ;
+    text-align: center;
+    
+    position: relative;
+    right: 15px;
+}
+
+#ct2{
+    color: rgb(19, 134, 235);
+    background-color: black;
+    width: 50px;
+    height: 32.5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center ;
+    text-align: center;
+}
+
+#vida2{
+    color: rgb(226, 34, 34);
+    background-color: black;
+    width: 50px;
+    height: 32.5px;
+    grid-column: 1;
+    grid-row: 2;
+    border: 2px solid white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center ;
+    text-align: center;
 }

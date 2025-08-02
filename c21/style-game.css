@@ -1,11 +1,14 @@
 * {
     margin: 0px;
     padding: 0px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 body {
     background-color: green;
 }
+
+
 
 #interaction {
     display: flex;
@@ -13,7 +16,8 @@ body {
     justify-content: space-between;
 
     position: relative;
-    top: 5ch;
+    margin: 10px;
+
 
 }
 
@@ -23,26 +27,26 @@ body {
     height: 500px;
     background-color: rgb(58, 207, 58);
     border-radius: 11px;
-
+    
     
 }
 #mesa-cartas{
-        width: auto;
-        height: auto;
-        display: grid;
-        grid-template-columns: repeat(6,36px);
-        grid-template-rows: 65px 70px 20px 70px 33px;
-        grid-template-areas: 
-        "p11 p12 p13 p14 p15 p16" 
-        ""
-        "Baralho contador"
-        ""
-        "p21 p22 p23 p24 p25 p26";
-        justify-content: center;
-        margin: 24px;
-        gap: 6px;
+    width: auto;
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(6,36px);
+    grid-template-rows: 65px 70px 20px 70px 33px;
+    grid-template-areas: 
+    "p11 p12 p13 p14 p15 p16" 
+    ""
+    "Baralho contador"
+    ""
+    "p21 p22 p23 p24 p25 p26";
+    justify-content: center;
+    margin: 24px;
+    gap: 6px;
     
-    }
+}
 
 #table h3 {
     font-size: 16px;
@@ -60,21 +64,21 @@ body {
     display: grid;
     grid-template-rows: 0.2fr 2fr 2fr;
     grid-template-areas:
-        "cabecario"
-        "cartas"
-        "descricao";
-
+    "cabecario"
+    "cartas"
+    "descricao";
+    
     margin: 15px;
     width: 250px;
     height: 500px;
     background-color: rgb(58, 207, 58);
     border-radius: 11px;
-
+    
 }
 
 #inventario h3 {
     grid-area: cabecario;
-
+    
     font-size: 16px;
     text-align: center;
     color: rgb(39, 9, 121);
@@ -88,8 +92,8 @@ body {
     border-radius: 0px 0px 11px 11px;
     color: aliceblue;
     background-color: rgba(0, 0, 0, 0.5);
-
-
+    
+    
 }
 
 #cartas_especiais {
@@ -97,12 +101,12 @@ body {
     grid-template-columns: 1fr 1fr;
     justify-self: center;
     gap: 12px;
-
+    
     /* width: auto; */
     margin: 12px;
-
+    
     overflow-y: scroll;
-
+    
 }
 
 .carta_especial {
@@ -177,7 +181,7 @@ body {
     grid-column: 6;
     grid-row: 5;
     border: 2px solid white;
-
+    
     display: flex;
     flex-direction: column;
     justify-content: center ;
@@ -206,9 +210,83 @@ body {
     grid-column: 1;
     grid-row: 2;
     border: 2px solid white;
-
+    
     display: flex;
     flex-direction: column;
     justify-content: center ;
     text-align: center;
+}
+#carta_pbaixo{
+    width: 35px;
+    height: 65px;
+    background-image: url('img/1080a4bd1a33cec92019fab5efb3995d.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 150%;
+    border-radius: 2px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+#carta{
+    width: 35px;
+    height: 65px;
+    background-color: rgb(211, 191, 162);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+#limite-tempo{
+    display: flex;
+    flex-direction: column;
+    border: 2px solid white;
+    border-radius: 3px;
+    background-color: transparent;
+    width: 50px;
+    height: 65px;
+    grid-column: 1;
+    grid-row: 3;
+}
+
+#tempo{
+    color: rgb(255, 255, 255);
+    background-color: black;
+    border-bottom: 2px solid white;
+    width: 50px;
+    height: 32.5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center ;
+    text-align: center;
+    font-size: small;
+}
+#limite{
+    color: rgb(255, 255, 255);
+    background-color: black;
+    width: 50px;
+    height: 32.5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center ;
+    text-align: center;
+    font-size: small;
+}
+
+
+@media (max-width: 900px){
+    #interaction {
+        flex-direction: column-reverse;
+    }
+
+    #table{
+        width: 94%;
+    }
 }

@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="..\styles\game-page\style-game.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"></script>
+    <link rel="stylesheet" href="..\styles\style-game.css">
 </head>
 <header>
 
@@ -50,7 +51,7 @@
                 <div id="vida2">❤️5</div>
 
 
-                <div id="baralho"><div id="carta_pbaixo"></div></div>
+                <div id="baralho"><div id="carta_pbaixo" onclick="apertou()"></div></div>
                 <div id="contador_d">
                     <div id="ct1">💣-1</div>
                     <div id="ct2">🩹+1</div>
@@ -77,6 +78,19 @@
         </div>
     </section>
 </body>
-<script></script>
+<script>
+    const socket = io('http://127.0.0.1:5000');
+    window.onload = function() {
+        
 
+        socket.on('connect', () => {
+                socket.send('Usuário conectado ao socket!')
+            });
+
+        }
+        function apertou() {
+            socket.send('arroz')
+        };
+
+</script>
 </html>

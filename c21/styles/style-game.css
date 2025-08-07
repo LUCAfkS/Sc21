@@ -148,7 +148,7 @@ body {
     grid-column: 3;
     grid-row: 3;
 
-    background-image: url('../../img/1080a4bd1a33cec92019fab5efb3995d.png');
+    background-image: url('img/1080a4bd1a33cec92019fab5efb3995d.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -224,7 +224,7 @@ body {
 #carta_pbaixo{
     width: 35px;
     height: 65px;
-    background-image: url('../../img/1080a4bd1a33cec92019fab5efb3995d.png');
+    background-image: url('img/1080a4bd1a33cec92019fab5efb3995d.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

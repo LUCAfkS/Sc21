@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit, send
 
-app = Flask(__name__, template_folder='../templates', static_folder='../styles')
+app = Flask(__name__, template_folder='../templates', static_folder='../styles',)
 socketio = SocketIO(app, cors_allowed_origins="*")  # Liberando CORS para testes locais
 
 @app.route('/')

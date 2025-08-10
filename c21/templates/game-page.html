@@ -18,7 +18,7 @@
             <h3>inventario</h3>
             <div id="cartas_especiais">
                 <div class="carta_especial">
-                    cartas especiais                    
+                    cartas especiais
                 </div>
                 <div class="carta_especial">
                     cartas especiais
@@ -41,56 +41,65 @@
             <h3>Table</h3>
             <div id="mesa-cartas">
 
-<div class="p1-carteira"></div>
-                <div class="p1-carteira"></div>
-                <div class="p1-carteira"></div>
-                <div class="p1-carteira"></div>
-                <div class="p1-carteira"></div>
-                <div class="p1-carteira"></div>
-                
+                <div class="p1-carteira" id="00"></div>
+                <div class="p1-carteira" id="01"></div>
+                <div class="p1-carteira" id="02"></div>
+                <div class="p1-carteira" id="03"></div>
+                <div class="p1-carteira" id="04"></div>
+                <div class="p1-carteira" id="05"></div>
+
                 <div id="vida2">❤️5</div>
 
 
-                <div id="baralho"><div id="carta_pbaixo" onclick="apertou()"></div></div>
+                <div id="baralho">
+                    <div class="carta_pbaixo" onclick="apertou()"></div>
+                    <div class="carta" onclick="apertou()">4</div>
+                </div>
                 <div id="contador_d">
                     <div id="ct1">💣-1</div>
                     <div id="ct2">🩹+1</div>
                 </div>
                 <div id="limite-tempo">
-                    <div id="tempo">⏲️1:30</div>
+                    <div id="timer">⏲️ 1:30</div>
                     <div id="limite">🃏 3/21</div>
                 </div>
                 <div id="vida1">💙5</div>
 
-                
-                <div class="p2-carteira">
-                    <div id="carta_pbaixo">2</div>
+
+                <div class="p2-carteira" id="10">
+                    <div class="carta_pbaixo">2</div>
                 </div>
-                <div class="p2-carteira">
-                    <div id="carta">1</div>
+                <div class="p2-carteira" id="11">
+                    <div class="carta">1</div>
                 </div>
-                <div class="p2-carteira"></div>
-                <div class="p2-carteira"></div>
-                <div class="p2-carteira"></div>
-                <div class="p2-carteira"></div>
-                
+                <div class="p2-carteira" id="12"></div>
+                <div class="p2-carteira" id="13"></div>
+                <div class="p2-carteira" id="14"></div>
+                <div class="p2-carteira" id="15"></div>
+
             </div>
         </div>
     </section>
 </body>
 <script>
     const socket = io();
-    window.onload = function() {
-        
+    let i = 11
+    socket.on('connect', () => {
+        socket.send('Usuário conectado ao socket!');
+    });
 
-        socket.on('connect', () => {
-                socket.send('Usuário conectado ao socket!')
-            });
+    socket.on('timer', (data) => {
+        document.getElementById('timer').innerText = `⏲️ ${data}`;
+    });
 
-        }
-        function apertou() {
-            socket.send('arroz')
-        };
-
+    function apertou() {        
+        i++
+        const novaDiv = document.createElement('div');
+        novaDiv.className = 'carta';
+        novaDiv.innerText = '4';
+        document.getElementById(String(i)).appendChild(novaDiv);
+    }
 </script>
+
+
 </html>

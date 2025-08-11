@@ -102,18 +102,29 @@ body {
     grid-template-columns: 1fr 1fr;
     justify-self: center;
     gap: 12px;
+    margin: 6px;
+    padding: 8px;
 
-    /* width: auto; */
-    margin: 12px;
-
+    
     overflow-y: scroll;
-
+    
 }
 
 .carta_especial {
-    width: 100px;
-    height: 100px;
+    display: flex;
+    padding: 3px;
+    width: 90px;
+    height: 90px;
+    
     background-color: brown;
+    border: 3px solid black;
+    border-radius: 8px;
+
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+.carta_especial:hover{
+    transform: scale(1.1);
 }
 
 #descrição_carta p {
@@ -281,40 +292,58 @@ body {
 }
 
 #baralho {
-    border: 2px solid rgba(224, 13, 13, 0.8);
-    width: 35px;
-    height: 65px;
-    grid-column: 3;
-    grid-row: 3;
-
-    background-image: url('img/1080a4bd1a33cec92019fab5efb3995d.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 150%;
-    border-radius: 2px;
+  perspective: 1000px;
+  border: 2px solid rgba(224, 13, 13, 0.8);
+  width: 35px;
+  height: 65px;
+  grid-column: 3;
+  grid-row: 3;
+  background-image: url('img/1080a4bd1a33cec92019fab5efb3995d.png');
+  background-size: 150%;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 2px;
+  cursor: pointer;
 }
 
+#baralho .carta_pbaixo:hover{
+    transform: translateY(4px);
+
+}
+
+#baralho .carta_pbaixo,
+#baralho .carta {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  transition: transform 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Frente da carta (visível inicialmente) */
 #baralho .carta_pbaixo {
-    position: absolute;
-    backface-visibility: visible;
-    perspective: 1000px;
-    transition: transform 0.5s ease, transform 0.5s ease;
-
+  z-index: 2;
+  background-color: crimson;
 }
 
-#baralho .carta{
-    transition: transform 0.5s ease, transform 0.5s ease;
-
+/* Verso da carta (oculto inicialmente) */
+#baralho .carta {
+  transform: rotateY(180deg);
 }
 
-#baralho .carta_pbaixo:hover {
-    transform: translateY(10px);
+/* Quando o usuário clica e segura */
+#baralho:active .carta_pbaixo {
+  transform: rotateY(180deg);
 }
 
-#baralho .carta_pbaixo:active {
-    transform: rotateY(180deg);
+#baralho:active .carta {
+  transform: rotateY(0deg);
 }
+
+
 
 @media (max-width: 900px) {
     #interaction {

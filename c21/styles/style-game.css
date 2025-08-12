@@ -37,12 +37,6 @@ body {
     display: grid;
     grid-template-columns: repeat(6, 36px);
     grid-template-rows: 65px 66px 66px 66px;
-    grid-template-areas:
-        "p11 p12 p13 p14 p15 p16"
-        ""
-        "Baralho contador"
-        ""
-        "p21 p22 p23 p24 p25 p26";
     justify-content: center;
     margin: 24px;
     gap: 6px;
@@ -230,6 +224,39 @@ body {
     grid-row: 1;
 }
 
+@keyframes spawn2{
+    from {
+    transform: translateY(-10px);
+  }
+    to {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes spawn1{
+    from {
+    transform: translateY(10px);
+  }
+    to {
+    transform: translateY(0px);
+  }
+}
+.p1-carteira .carta_pbaixo{
+    animation: spawn1 0.5s ease;
+}
+
+.p1-carteira .carta{
+    animation: spawn1 0.5s ease;
+}
+
+.p2-carteira .carta_pbaixo{
+    animation: spawn2 0.5s ease;
+}
+
+.p2-carteira .carta{
+    animation: spawn2 0.5s ease;
+}
+
 
 
 #contador_d {
@@ -308,7 +335,7 @@ body {
 .carta_pbaixo {
     width: 35px;
     height: 65px;
-    background-image: url('img/1080a4bd1a33cec92019fab5efb3995d.png');
+    background-image: url('img/back-card.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

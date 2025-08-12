@@ -36,7 +36,7 @@ body {
     height: auto;
     display: grid;
     grid-template-columns: repeat(6, 36px);
-    grid-template-rows: 65px 70px 20px 70px 33px;
+    grid-template-rows: 65px 66px 66px 66px;
     grid-template-areas:
         "p11 p12 p13 p14 p15 p16"
         ""
@@ -57,6 +57,97 @@ body {
     border-radius: 11px 2px;
     height: 21px;
 }
+
+.carta_especial {
+    display: flex;
+    padding: 3px;
+    width: 90px;
+    height: 90px;
+    
+    background-color: brown;
+    border: 3px solid black;
+    border-radius: 8px;
+
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+.carta_especial:hover{
+    transform: scale(1.1);
+}
+
+#ativamax2{
+    height: auto;
+    width: auto;
+    grid-column: 6;
+    grid-row: 2;
+    display: flex;
+    align-items: center;
+}
+#ativamax2 .carta_especial{
+    width: 30px;
+    height: 30px;
+    border-width: 1.8px;
+    border-radius: 6px;
+    cursor: initial;
+}
+#ativamax2 .carta_especial:hover{
+    transform:scale(1);
+}
+#ativabet2{
+    height: auto;
+    width: auto;
+    grid-column: 5;
+    grid-row: 2;
+    display: flex;
+    align-items: center;
+}
+#ativabet2 .carta_especial{
+    width: 30px;
+    height: 30px;
+    border-width: 1.8px;
+    border-radius: 6px;
+    cursor: initial;
+}
+#ativabet2 .carta_especial:hover{
+    transform:scale(1);
+}
+#ativamax1{
+    height: auto;
+    width: auto;
+    grid-column: 1;
+    grid-row: 4;
+    display: flex;
+    align-items: center;
+}
+#ativamax1 .carta_especial{
+    width: 30px;
+    height: 30px;
+    border-width: 1.8px;
+    border-radius: 6px;
+    cursor: initial;
+}
+#ativamax1 .carta_especial:hover{
+    transform:scale(1);
+}
+#ativabet1{
+    height: auto;
+    width: auto;
+    grid-column: 2;
+    grid-row: 4;
+    display: flex;
+    align-items: center;
+}
+#ativabet1 .carta_especial{
+    width: 30px;
+    height: 30px;
+    border-width: 1.8px;
+    border-radius: 6px;
+    cursor: initial;
+}
+#ativabet1 .carta_especial:hover{
+    transform:scale(1);
+}
+
 
 #inventario {
     /* display: flex;
@@ -110,22 +201,6 @@ body {
     
 }
 
-.carta_especial {
-    display: flex;
-    padding: 3px;
-    width: 90px;
-    height: 90px;
-    
-    background-color: brown;
-    border: 3px solid black;
-    border-radius: 8px;
-
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-.carta_especial:hover{
-    transform: scale(1.1);
-}
 
 #descrição_carta p {
     grid-area: descricao;
@@ -143,7 +218,7 @@ body {
     background-color: transparent;
     width: 35px;
     height: 65px;
-    grid-row: 6;
+    grid-row: 5;
 }
 
 .p1-carteira {
@@ -176,9 +251,11 @@ body {
     width: 50px;
     height: 32.5px;
     display: flex;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: center;
+    
 }
 
 #vida1 {
@@ -187,16 +264,18 @@ body {
     width: 50px;
     height: 32.5px;
     grid-column: 6;
-    grid-row: 5;
+    grid-row: 4;
     border: 2px solid white;
 
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-self: flex-end;
     text-align: center;
 
     position: relative;
     right: 15px;
+    top: 4px;
 }
 
 #ct2 {
@@ -208,6 +287,7 @@ body {
     flex-direction: column;
     justify-content: center;
     text-align: center;
+    
 }
 
 #vida2 {

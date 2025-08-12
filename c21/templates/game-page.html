@@ -50,6 +50,13 @@
 
                 <div id="vida2">❤️5</div>
 
+                <div id="ativabet2">
+                    <div class="carta_especial"></div>
+                </div>
+
+                <div id="ativamax2">
+                    <div class="carta_especial"></div>
+                </div>
 
                 <div id="baralho" onclick="apertou()">
                     <div class="carta_pbaixo"></div>
@@ -63,6 +70,15 @@
                     <div id="timer">⏲️ 1:30</div>
                     <div id="limite">🃏 3/21</div>
                 </div>
+
+                <div id="ativabet1">
+                    <div class="carta_especial"></div>
+                </div>
+
+                <div id="ativamax1">
+                    <div class="carta_especial"></div>
+                </div>
+
                 <div id="vida1">💙5</div>
 
 
@@ -92,7 +108,7 @@
         document.getElementById('timer').innerText = `⏲️ ${data}`;
     });
 
-    function apertou() {        
+    function apertou() {
         i++
         const novaDiv = document.createElement('div');
         novaDiv.className = 'carta';

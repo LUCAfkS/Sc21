@@ -5,31 +5,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+
+    <link rel="stylesheet" href="..\styles\tutorial.css">
     <link rel="stylesheet" href="..\styles\style-game.css">
 </head>
 <header>
 
 </header>
 
+
+
 <body>
+    <section id="jogadores" onclick="delete_tutorial()">
+        <h3 id="menu">menu</h3>
+        <div>
+            <h3 id="jogador2" onclick="selecionar_p(this.innerText)">jogador-2</h3>
+            <h3 id="jogador1" onclick="selecionar_p(this.innerText)">jogador-1</h3>
+        </div>
+    </section>
+
+
     <section id="interaction">
         <div id="inventario">
             <h3>inventario</h3>
             <div id="cartas_especiais">
-                <div class="carta_especial">
+                <div class="carta_especial" onclick="usar_trunfo(this.innerText)">
                     cartas especiais
                 </div>
-                <div class="carta_especial">
+                <div class="carta_especial" onclick="usar_trunfo(this.innerText)">
                     cartas especiais
                 </div>
-                <div class="carta_especial">
+                <div class="carta_especial" onclick="usar_trunfo(this.innerText)">
                     cartas especiais
                 </div>
-                <div class="carta_especial">
+                <div class="carta_especial" onclick="usar_trunfo(this.innerText)">
                     cartas especiais
                 </div>
-                <div class="carta_especial">
+                <div class="carta_especial" onclick="usar_trunfo(this.innerText)">
                     cartas especiais
                 </div>
             </div>
@@ -37,6 +52,7 @@
                 <p>descrição da carta</p>
             </div>
         </div>
+
         <div id="table">
             <h3>Table</h3>
             <div id="mesa-cartas">
@@ -48,28 +64,7 @@
                 <div class="p1-carteira" id="04"></div>
                 <div class="p1-carteira" id="05"></div>
 
-                <div id="vida2">❤️5</div>
-
-                <div id="ativabet2">
-                    <div class="carta_especial"></div>
-                </div>
-
-                <div id="ativamax2">
-                    <div class="carta_especial"></div>
-                </div>
-
-                <div id="baralho" onclick="apertou()">
-                    <div class="carta_pbaixo"></div>
-                    <div class="carta">4</div>
-                </div>
-                <div id="contador_d">
-                    <div id="ct1">💣-1</div>
-                    <div id="ct2">🩹+1</div>
-                </div>
-                <div id="limite-tempo">
-                    <div id="timer">⏲️ 1:30</div>
-                    <div id="limite">🃏 3/21</div>
-                </div>
+                <div id="vida1">❤️5</div>
 
                 <div id="ativabet1">
                     <div class="carta_especial"></div>
@@ -79,15 +74,32 @@
                     <div class="carta_especial"></div>
                 </div>
 
-                <div id="vida1">💙5</div>
+                <div id="baralho" onclick="mais_uma()">
+                    <div class="carta_pbaixo"></div>
+                    <div class="carta" id="bcard">?</div>
+                </div>
+                <div id="contador_d">
+                    <div id="ct1">💣-1</div>
+                    <div id="ct2">🩹+1</div>
+                </div>
+                <div id="limite-tempo">
+                    <div id="timer">⏲️ 0:00</div>
+                    <div id="limite">🃏 0/21</div>
+                </div>
+
+                <div id="ativabet2">
+                    <div class="carta_especial"></div>
+                </div>
+
+                <div id="ativamax2">
+                    <div class="carta_especial"></div>
+                </div>
+
+                <div id="vida2">💙5</div>
 
 
-                <div class="p2-carteira" id="10">
-                    <div class="carta_pbaixo">2</div>
-                </div>
-                <div class="p2-carteira" id="11">
-                    <div class="carta">1</div>
-                </div>
+                <div class="p2-carteira" id="10"></div>
+                <div class="p2-carteira" id="11"></div>
                 <div class="p2-carteira" id="12"></div>
                 <div class="p2-carteira" id="13"></div>
                 <div class="p2-carteira" id="14"></div>
@@ -99,21 +111,61 @@
 </body>
 <script>
     const socket = io();
-    let i = 11
+    let i = 9
     socket.on('connect', () => {
         socket.send('Usuário conectado ao socket!');
+        socket.emit('start_timer');
+
     });
 
     socket.on('timer', (data) => {
         document.getElementById('timer').innerText = `⏲️ ${data}`;
     });
+    socket.on('start', (numero_da_carta) => {
+        console.log()
+    })
 
-    function apertou() {
+    function mais_uma() {
         i++
-        const novaDiv = document.createElement('div');
-        novaDiv.className = 'carta';
-        novaDiv.innerText = '4';
-        document.getElementById(String(i)).appendChild(novaDiv);
+        socket.emit('deal', (numero_da_carta) => {
+            console.log(String(numero_da_carta));
+            const novaDiv = document.createElement('div');
+            novaDiv.className = 'carta';
+            novaDiv.innerText = numero_da_carta.numero_da_carta;
+            if (i == 10) {
+                novaDiv.className = 'carta_pbaixo'
+            }
+            document.getElementById(String(i)).appendChild(novaDiv);
+        })
+    }
+
+    function delete_tutorial() {
+        socket.emit('delete_tuto', () => {
+            tuto = document.getElementById('tutorial').remove();
+            // tuto.remove();
+        })
+    }
+
+    function usar_trunfo(nome_trunfo) {
+        console.log(nome_trunfo)
+    }
+
+    p = 0
+    function selecionar_p(player) {
+        socket.emit('selecionar_p', player)
+        p++
+        if (p == 2) {
+            document.getElementById('jogadores').remove()
+
+        }
+        if (player == 'jogador-2') {
+            document.getElementById('jogador2').remove()
+            Cookies.set('player', 'player2')
+        }
+        else if (player == 'jogador-1') {
+            Cookies.set('player', 'player1')
+            document.getElementById('jogador1').remove()
+        }
     }
 </script>
 

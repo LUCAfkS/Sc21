@@ -3,42 +3,49 @@ from flask_socketio import SocketIO, emit, send
 from time import sleep
 from threading import Thread
 
-app = Flask(__name__, template_folder='../templates', static_folder='../styles',)
-socketio = SocketIO(app, cors_allowed_origins="*")  # Liberando CORS para testes locais
+from Models.Models import deal_card
+import Models.Models as mm
+
+
+app = Flask(__name__, template_folder='../templates', static_folder='../styles', )
+socketio = SocketIO(app, cors_allowed_origins="*",)  # Liberando CORS para testes locais
+
+mesa = mm.Table(socketio)
+mesa.p1 = None
+mesa.p2 = None
 
 @app.route('/')
 def home():
     return render_template('game-page.html')
 
-@socketio.on('message')
-def handle_message(msg):
-    print(f"Mensagem recebida: {msg}")
-    send("Mensagem recebida no servidor!", broadcast=True)
+@socketio.on('selecionar_p')
+def selecionar_p(player):
+    if player == 'jogador-1':
+        mesa.p1 = player;print(mesa.p1)
+    elif player == 'jogador-2':
+        mesa.p2 = player;print(mesa.p2)
+    if mesa.p1 != None and mesa.p2 !=None:
+        start_game()
 
 
-@socketio.on('times')
-def receber_tempo(valor):
-    print('Tempo recebido:', valor)
-    emit('resposta_tempo', f"Tempo recebido: {valor}")
 
-def timer():
-    s= 30
-    m= 1
-    first = True
-    while True:
-        s-=1
-        if s ==0 and m ==0:
-            socketio.emit('timer',str(m)+':0'+str(s)) 
-            break
-        elif s ==0:
-            s+=59
-            m-=1
-        if s < 10:
-            socketio.emit('timer',str(m)+':0'+str(s)) 
-        else:
-            socketio.emit('timer',str(m)+':'+str(s)) 
-        sleep(1)
+@socketio.on('deal')
+def dar():
+    carta = deal_card(mesa.deck_cards)
+    return {'numero_da_carta': carta[0]}
+
+
+@socketio.on('delete_tuto')
+def delete_tutorial():
+    return
+
+
+def start_game():
+    if mesa.remaining_time == 90:
+        socketio.start_background_task(target=mesa.time_run)
+
+
 
 if __name__ == '__main__':
-    Thread(target=timer).start()
-    socketio.run(app, debug=True)
+    
+    socketio.run(app, debug=True,)

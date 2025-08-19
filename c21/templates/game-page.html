@@ -19,7 +19,7 @@
 
 
 <body>
-    <section id="jogadores" onclick="delete_tutorial()">
+    <section id="jogadores">
         <h3 id="menu">menu</h3>
         <div>
             <h3 id="jogador2" onclick="selecionar_p(this.innerText)">jogador-2</h3>
@@ -112,11 +112,19 @@
 <script>
     const socket = io();
     let i = 9
-    socket.on('connect', () => {
+
+    // if (Cookies.get(''))
+
+
+    window.onload = socket.on('connect', () => {
         socket.send('Usuário conectado ao socket!');
         socket.emit('start_timer');
+        socket.emit('del_tela')
+
 
     });
+
+    
 
     socket.on('timer', (data) => {
         document.getElementById('timer').innerText = `⏲️ ${data}`;
@@ -126,8 +134,10 @@
     })
 
     function mais_uma() {
-        i++
-        socket.emit('deal', (numero_da_carta) => {
+        socket.emit('deal');
+    }
+    socket.on('dei', numero_da_carta =>{
+            i++
             console.log(String(numero_da_carta));
             const novaDiv = document.createElement('div');
             novaDiv.className = 'carta';
@@ -137,36 +147,55 @@
             }
             document.getElementById(String(i)).appendChild(novaDiv);
         })
-    }
 
-    function delete_tutorial() {
-        socket.emit('delete_tuto', () => {
-            tuto = document.getElementById('tutorial').remove();
-            // tuto.remove();
-        })
-    }
 
     function usar_trunfo(nome_trunfo) {
         console.log(nome_trunfo)
     }
 
+
     p = 0
     function selecionar_p(player) {
-        socket.emit('selecionar_p', player)
-        p++
-        if (p == 2) {
-            document.getElementById('jogadores').remove()
+        socket.emit('selecionar_p', { player: player }, () => {
+            if(player == 'jogador-1'){player = 'jogador1'}
+            else if(player == 'jogador-2'){player = 'jogador2'}
+            p++
 
-        }
-        if (player == 'jogador-2') {
-            document.getElementById('jogador2').remove()
-            Cookies.set('player', 'player2')
-        }
-        else if (player == 'jogador-1') {
-            Cookies.set('player', 'player1')
-            document.getElementById('jogador1').remove()
-        }
+            if (p == 2) {
+                document.getElementById('jogadores').remove()
+
+            }
+            if (Cookies.get('player2') == 'jogador2') {
+                document.getElementById('jogador2').remove()
+                Cookies.set('player2', 'player2')
+                document.getElementById('jogadores').remove()
+            }
+
+            else if (Cookies.get('player1') == 'jogador1') {
+                Cookies.set('player1', 'player1')
+                document.getElementById('jogador1').remove()
+                document.getElementById('jogadores').remove()
+            }
+            else switch (player) {
+                case 'jogador1':
+                    Cookies.set('player1', 'player1')
+                    document.getElementById('jogadores').remove()
+                    
+                    break
+                    case 'jogador2':
+                        Cookies.set('player2', 'player2')
+                        document.getElementById('jogadores').remove()
+                    break
+            }
+        })
     }
+    socket.on('forever',()=>{
+        if (Cookies.get('player2') == 'jogador2' && Cookies.get('player1') == 'jogador1') {
+            document.getElementById('jogadores').remove()
+    
+        }
+
+    })
 </script>
 
 

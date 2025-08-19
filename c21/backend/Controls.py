@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template,request
 from flask_socketio import SocketIO, emit, send
 from time import sleep
 from threading import Thread
@@ -19,20 +19,26 @@ def home():
     return render_template('game-page.html')
 
 @socketio.on('selecionar_p')
-def selecionar_p(player):
-    if player == 'jogador-1':
-        mesa.p1 = player;print(mesa.p1)
-    elif player == 'jogador-2':
-        mesa.p2 = player;print(mesa.p2)
+def selecionar_p(player: dict):
+    player = player['player']
+    if player == 'jogador1':
+        mesa.p1 = player
+        print(mesa.p1)
+    elif player == 'jogador2':
+        mesa.p2 = player
+        print(mesa.p2)
     if mesa.p1 != None and mesa.p2 !=None:
         start_game()
 
+@socketio.on('del_tela')
+def del_tela():
+    socketio.emit('forever',)
 
 
 @socketio.on('deal')
 def dar():
     carta = deal_card(mesa.deck_cards)
-    return {'numero_da_carta': carta[0]}
+    emit('dei',{'numero_da_carta': carta[0]},broadcast=True)
 
 
 @socketio.on('delete_tuto')
@@ -42,10 +48,10 @@ def delete_tutorial():
 
 def start_game():
     if mesa.remaining_time == 90:
-        socketio.start_background_task(target=mesa.time_run)
+        socketio.start_background_task(target=mesa.time_run,)
 
 
 
 if __name__ == '__main__':
     
-    socketio.run(app, debug=True,)
+    socketio.run(app, debug=True, )#host='0.0.0.0'

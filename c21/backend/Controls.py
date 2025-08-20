@@ -18,21 +18,39 @@ mesa.p2 = None
 def home():
     return render_template('game-page.html')
 
+def start_game():
+    if mesa.remaining_time == 90:
+        socketio.start_background_task(target=mesa.time_run,)
+
+@socketio.on('scan_cookiesp')
+def scanc():
+    if request.cookies.get('player1') or request.cookies.get('player2'):
+        emit('delete_players')
+
+
 @socketio.on('selecionar_p')
 def selecionar_p(player: dict):
     player = player['player']
-    if player == 'jogador1':
-        mesa.p1 = player
-        print(mesa.p1)
-    elif player == 'jogador2':
-        mesa.p2 = player
-        print(mesa.p2)
-    if mesa.p1 != None and mesa.p2 !=None:
-        start_game()
 
-@socketio.on('del_tela')
-def del_tela():
-    socketio.emit('forever',)
+    if not(request.cookies.get('player1')) or not(request.cookies.get('player2')):
+
+        if player == 'jogador1':
+            mesa.p1 = player
+            emit('delete_player1',broadcast=True)
+            emit('delete_players')
+            print(mesa.p1)
+
+        elif player == 'jogador2':
+            mesa.p2 = player
+            emit('delete_player2',broadcast=True)
+            emit('delete_players')
+            print(mesa.p2)
+
+        if mesa.p1 and mesa.p2:
+            print('começou')
+            start_game()
+    
+    else: emit('delete_players')
 
 
 @socketio.on('deal')
@@ -46,9 +64,6 @@ def delete_tutorial():
     return
 
 
-def start_game():
-    if mesa.remaining_time == 90:
-        socketio.start_background_task(target=mesa.time_run,)
 
 
 

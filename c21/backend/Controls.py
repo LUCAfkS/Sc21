@@ -21,6 +21,7 @@ def home():
 def start_game():
     if mesa.remaining_time == 90:
         socketio.start_background_task(target=mesa.time_run,)
+    dar()
 
 @socketio.on('scan_cookiesp')
 def scanc():

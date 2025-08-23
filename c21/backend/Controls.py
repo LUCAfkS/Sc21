@@ -1,5 +1,5 @@
-from flask import Flask, render_template,request
-from flask_socketio import SocketIO, emit, send
+from flask import Flask, render_template
+from flask_socketio import SocketIO, emit
 from time import sleep
 from threading import Thread
 
@@ -21,7 +21,11 @@ def home():
 def start_game():
     if mesa.remaining_time == 90:
         socketio.start_background_task(target=mesa.time_run,)
-    dar()
+    
+    for i in ['player1','player2','player1','player2']:
+        b={'request':i}
+        dar(b)
+    
 
 
 @socketio.on('scan_cookiesp')
@@ -31,9 +35,9 @@ def scanc(request):
 
 
 @socketio.on('selecionar_p')
-def selecionar_p(player):
-    player = player['player']
-    request = player['cookie']
+def selecionar_p(Request):
+    player = Request['player']
+    request = Request['cookie']
 
     if not(request):
 
@@ -67,14 +71,16 @@ def dar(request):
     emit('dei',{'numero_da_carta': carta[0]},broadcast=True)
 
 @socketio.on('max')
-def limitador(request):
+def limitador(Request):
+    request = Request
     soma=0
+    print('p1',mesa.player_one.hand_C)
+    print('p2',mesa.player_two.hand_C)
     if request['request'] == 'player1':
         for cs in mesa.player_one.hand_C: soma+=cs
         print(request['request'])
         emit('limit',{'soma':soma,'mesa':mesa.limit_burst},)
-    else:
-        # request['request'] == 'player2':
+    elif request['request'] == 'player2':
         for cs in mesa.player_two.hand_C: soma+=cs
         print(request['request'])
         emit('limit',{'soma':soma,'mesa':mesa.limit_burst},)

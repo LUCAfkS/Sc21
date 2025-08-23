@@ -24,8 +24,13 @@
         <div>
             <h3 id="jogador2" onclick="selecionar_p(this.innerText)">jogador-2</h3>
             <h3 id="jogador1" onclick="selecionar_p(this.innerText)">jogador-1</h3>
+
         </div>
     </section>
+
+    <div id="aguarde" class="desligado" >
+        adversario fazendo jogada...
+    </div>
 
 
     <section id="interaction">
@@ -128,17 +133,27 @@
 
     });
 
-    
 
     socket.on('timer', (data) => {
         document.getElementById('timer').innerText = `⏲️ ${data}`;
     });
-
+    ado = 0
     function atualizar_limite(){
             if (Cookies.get('player1')){
                 cookie = Cookies.get('player1')
             }
-            else{cookie = Cookies.get('player2')}
+            else if (Cookies.get('player2')){
+                cookie = Cookies.get('player2')}
+            else{
+                if(ado == 0){
+                    cookie = 'player1'
+                    ado++
+                }
+                if(ado == 1){
+                    cookie = 'player1'
+                    ado--
+                }
+            }
             socket.emit('max',{'request':cookie})
     }
 
@@ -151,6 +166,9 @@
         console.log()
     })
 
+    socket.on('mais_c',()=>{
+        mais_uma()
+    })
     function mais_uma() {
         if (Cookies.get('player1')){
             cookie = Cookies.get('player1')
@@ -159,16 +177,30 @@
         socket.emit('deal',{'request':cookie});
     }
 
-    function trocar_jogador(){
-        if(roundp == 0){
-            roundp++
-        }else{roundp--}
+    function trocar_jogador() {
+    const aguarde = document.getElementById('aguarde');
+    const isPlayer1 = Cookies.get('player1') === 'player1';
+    const isPlayer2 = Cookies.get('player2') === 'player2';
+
+    // Alterna o round
+    roundp = roundp === 0 ? 1 : 0;
+    console.log("Round atual:", roundp);
+
+    // Lógica de visibilidade
+    if ((isPlayer1 && roundp === 0) || (isPlayer2 && roundp === 1)) {
+        aguarde.classList.remove('ligado');
+        aguarde.classList.add('desligado');
+    } else {
+        aguarde.classList.remove('desligado');
+        aguarde.classList.add('ligado');
     }
+    }
+
+
 
     socket.on('dei', numero_da_carta =>{
         if(roundp){
             i1++
-            trocar_jogador()
             console.log(String(numero_da_carta));
             const novaDiv = document.createElement('div');
             novaDiv.className = 'carta';
@@ -180,7 +212,6 @@
             atualizar_limite()
         }else{
             i2++
-            trocar_jogador()
             console.log(String(numero_da_carta));
             const novaDiv = document.createElement('div');
             novaDiv.className = 'carta';
@@ -191,6 +222,12 @@
             document.getElementById("0"+String(i2)).appendChild(novaDiv);
             atualizar_limite()
         }
+        if(Cookies.get('player1') && roundp==1){
+            document.getElementById('aguarde').className = 'ligado'
+        }else if(Cookies.get('player2') && roundp==0){
+            document.getElementById('aguarde').className = 'ligado'
+        }
+        trocar_jogador()
     })
 
 
@@ -212,44 +249,50 @@
         document.getElementById('jogadores').remove()
         
     })
-    
         
     function selecionar_p(player) {
-        if(player == 'jogador-1'){player = 'jogador1'}
-        else if(player == 'jogador-2'){player = 'jogador2'}
-        socket.emit('selecionar_p', { player: player }, () => {
-            p++
+        if(!(Cookies.get('player1')) && !(Cookies.get('player2'))){
 
-            if (p == 2) {
-                rmp()
+            if(player == 'jogador-1'){player = 'jogador1'}
+            else if(player == 'jogador-2'){player = 'jogador2'}
+            cookie = ''
+            if(Cookies.get('player1')){cookie=Cookies.get('player1')}
+            if(Cookies.get('player2')){cookie=Cookies.get('player2')}
+            socket.emit('selecionar_p', { 'player': player,'cookie':cookie  }, () => {
+                p++
 
-            }
-            if (player == 'jogador2') {
-                Cookies.set('player2', 'player2',{expires:1,path: '/' })
-                rmp2()
-                rmp()
-            }
+                if (p == 2) {
+                    rmp()
 
-            else if (player == 'jogador1') {
-                Cookies.set('player1', 'player1',{expires:1,path: '/' })
-                document.getElementById('00').className = 'p2-carteira'
-                document.getElementById('01').className = 'p2-carteira'
-                document.getElementById('02').className = 'p2-carteira'
-                document.getElementById('03').className = 'p2-carteira'
-                document.getElementById('04').className = 'p2-carteira'
-                document.getElementById('05').className = 'p2-carteira'
 
-                document.getElementById('10').className = 'p1-carteira'
-                document.getElementById('11').className = 'p1-carteira'
-                document.getElementById('12').className = 'p1-carteira'
-                document.getElementById('13').className = 'p1-carteira'
-                document.getElementById('14').className = 'p1-carteira'
-                document.getElementById('15').className = 'p1-carteira'
-                rmp1()
-                rmp()
-    
-            }
-        })
+                }
+                if (player == 'jogador2') {
+                    Cookies.set('player2', 'player2',{expires:1,path: '/' })
+                    rmp2()
+
+                }
+
+                else if (player == 'jogador1') {
+                    Cookies.set('player1', 'player1',{expires:1,path: '/' })
+                    document.getElementById('00').className = 'p2-carteira'
+                    document.getElementById('01').className = 'p2-carteira'
+                    document.getElementById('02').className = 'p2-carteira'
+                    document.getElementById('03').className = 'p2-carteira'
+                    document.getElementById('04').className = 'p2-carteira'
+                    document.getElementById('05').className = 'p2-carteira'
+
+                    document.getElementById('10').className = 'p1-carteira'
+                    document.getElementById('11').className = 'p1-carteira'
+                    document.getElementById('12').className = 'p1-carteira'
+                    document.getElementById('13').className = 'p1-carteira'
+                    document.getElementById('14').className = 'p1-carteira'
+                    document.getElementById('15').className = 'p1-carteira'
+                    rmp1()
+                    
+        
+                }
+            })
+        }
     }
 
     window.onload = ()=>{

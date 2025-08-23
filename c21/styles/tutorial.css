@@ -1,5 +1,5 @@
 body{
-overflow: hidden;
+overflow: scroll;
 }
 #jogadores{
     color: azure;
@@ -63,3 +63,26 @@ overflow: hidden;
 #jogador2:hover{
     scale: 1.1;
 }
+#aguarde{
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 100vw;
+    height: 100vh;
+
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1s ease;
+    z-index: 9999;
+}
+
+.ligado{
+    opacity: 1;
+    display: flex;
+}
+.desligado{
+    opacity: 0;
+    display: none;
+}
+

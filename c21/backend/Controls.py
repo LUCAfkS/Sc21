@@ -23,17 +23,19 @@ def start_game():
         socketio.start_background_task(target=mesa.time_run,)
     dar()
 
+
 @socketio.on('scan_cookiesp')
-def scanc():
-    if request.cookies.get('player1') or request.cookies.get('player2'):
+def scanc(request):
+    if request['request']:
         emit('delete_players')
 
 
 @socketio.on('selecionar_p')
-def selecionar_p(player: dict):
+def selecionar_p(player):
     player = player['player']
+    request = player['cookie']
 
-    if not(request.cookies.get('player1')) or not(request.cookies.get('player2')):
+    if not(request):
 
         if player == 'jogador1':
             mesa.p1 = player
@@ -55,9 +57,29 @@ def selecionar_p(player: dict):
 
 
 @socketio.on('deal')
-def dar():
+def dar(request):
+    request['request']
     carta = deal_card(mesa.deck_cards)
+    if request['request']== 'player1':
+        mesa.player_one.hand_C.append(carta[0])
+    else:
+        mesa.player_two.hand_C.append(carta[0])
     emit('dei',{'numero_da_carta': carta[0]},broadcast=True)
+
+@socketio.on('max')
+def limitador(request):
+    soma=0
+    if request['request'] == 'player1':
+        for cs in mesa.player_one.hand_C: soma+=cs
+        print(request['request'])
+        emit('limit',{'soma':soma,'mesa':mesa.limit_burst},)
+    else:
+        # request['request'] == 'player2':
+        for cs in mesa.player_two.hand_C: soma+=cs
+        print(request['request'])
+        emit('limit',{'soma':soma,'mesa':mesa.limit_burst},)
+
+
 
 
 @socketio.on('delete_tuto')

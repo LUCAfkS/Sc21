@@ -133,12 +133,30 @@
     socket.on('timer', (data) => {
         document.getElementById('timer').innerText = `⏲️ ${data}`;
     });
+
+    function atualizar_limite(){
+            if (Cookies.get('player1')){
+                cookie = Cookies.get('player1')
+            }
+            else{cookie = Cookies.get('player2')}
+            socket.emit('max',{'request':cookie})
+    }
+
+    socket.on('limit', (key)=>{
+        console.log(key.soma)
+        document.getElementById('limite').innerText = `🃏${key.soma}/${key.mesa}`;
+    })
+
     socket.on('start', (numero_da_carta) => {
         console.log()
     })
 
     function mais_uma() {
-        socket.emit('deal');
+        if (Cookies.get('player1')){
+            cookie = Cookies.get('player1')
+        }
+        else{cookie = Cookies.get('player2')}
+        socket.emit('deal',{'request':cookie});
     }
 
     function trocar_jogador(){
@@ -159,6 +177,7 @@
                 novaDiv.className = 'carta_pbaixo'
             }
             document.getElementById(String(i1)).appendChild(novaDiv);
+            atualizar_limite()
         }else{
             i2++
             trocar_jogador()
@@ -166,10 +185,11 @@
             const novaDiv = document.createElement('div');
             novaDiv.className = 'carta';
             novaDiv.innerText = numero_da_carta.numero_da_carta;
-            if (i2 == 10) {
+            if (i2 == 0) {
                 novaDiv.className = 'carta_pbaixo'
             }
             document.getElementById("0"+String(i2)).appendChild(novaDiv);
+            atualizar_limite()
         }
     })
 
@@ -205,28 +225,28 @@
 
             }
             if (player == 'jogador2') {
-                Cookies.set('player2', 'player2')
+                Cookies.set('player2', 'player2',{expires:1,path: '/' })
                 rmp2()
                 rmp()
             }
 
             else if (player == 'jogador1') {
-                Cookies.set('player1', 'player1')
-                    document.getElementById('00').className = 'p2-carteira'
-                    document.getElementById('01').className = 'p2-carteira'
-                    document.getElementById('02').className = 'p2-carteira'
-                    document.getElementById('03').className = 'p2-carteira'
-                    document.getElementById('04').className = 'p2-carteira'
-                    document.getElementById('05').className = 'p2-carteira'
+                Cookies.set('player1', 'player1',{expires:1,path: '/' })
+                document.getElementById('00').className = 'p2-carteira'
+                document.getElementById('01').className = 'p2-carteira'
+                document.getElementById('02').className = 'p2-carteira'
+                document.getElementById('03').className = 'p2-carteira'
+                document.getElementById('04').className = 'p2-carteira'
+                document.getElementById('05').className = 'p2-carteira'
 
-                    document.getElementById('10').className = 'p1-carteira'
-                    document.getElementById('11').className = 'p1-carteira'
-                    document.getElementById('12').className = 'p1-carteira'
-                    document.getElementById('13').className = 'p1-carteira'
-                    document.getElementById('14').className = 'p1-carteira'
-                    document.getElementById('15').className = 'p1-carteira'
-                    rmp1()
-                    rmp()
+                document.getElementById('10').className = 'p1-carteira'
+                document.getElementById('11').className = 'p1-carteira'
+                document.getElementById('12').className = 'p1-carteira'
+                document.getElementById('13').className = 'p1-carteira'
+                document.getElementById('14').className = 'p1-carteira'
+                document.getElementById('15').className = 'p1-carteira'
+                rmp1()
+                rmp()
     
             }
         })

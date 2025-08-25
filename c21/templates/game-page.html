@@ -115,7 +115,7 @@
     </section>
 </body>
 <script>
-    const socket = io('http://localhost:5000');
+    const socket = io();
     roundp = 0
     let i1 = 9
     let i2 = -1
@@ -200,11 +200,20 @@
         aguarde.classList.remove('desligado');
         aguarde.classList.add('ligado');
     }
+    socket.emit('reset')
     }
-
+    socket.on('trocar',()=>{
+        trocar_jogador()
+    })
 
 
     socket.on('dei', numero_da_carta =>{
+
+        if (!numero_da_carta.numero_da_carta) {
+        console.log("Nenhuma carta recebida. Baralho pode estar vazio.");
+        return window.alert('acabou as cartas do baralho');
+        }
+
         if(roundp){
             i1++
             console.log(String(numero_da_carta));

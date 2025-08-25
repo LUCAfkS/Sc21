@@ -18,13 +18,18 @@ class Deck_T(Deck_C):
         
 def deal_card(deck: Deck_C,number_of_cards:int = 1,letter_number:int = 0) -> list:
     return_list = []
+
+    if not deck.cards_list:
+        print(f'[log][{date}]: Baralho vazio. Nenhuma carta distribuída.')
+        return []
+
     if letter_number == 0:
         try:
             for i in range(number_of_cards):
                 random_index = randint(0,len(deck.cards_list)-1)
                 return_list.append(deck.cards_list[random_index])
                 if not(deck.infinity): deck.cards_list.pop(random_index)
-        except: print(f'[log][{date}]: solo card:{return_list}--{random_index}')
+        except: return None
         return return_list
 
     elif letter_number in deck.cards_list:
@@ -109,26 +114,34 @@ class Table:
         self.remaining_time = 90
     
     def time_run(self):
-        s= 30
-        m= 1
-        first = True
-        while True:
-            s-=1
-            self.remaining_time-=1 
-            if s ==0 and m ==0:
-                self.socketio.emit('timer',str(m)+':0'+str(s),namespace='/',)
-                self.round +=1
-                break
-            elif s ==0:
-                s+=59
-                m-=1
-            if s < 10:
-                self.socketio.emit('timer',str(m)+':0'+str(s),namespace='/',)
+        s = 30
+        m = 1
+        self.timer_running = True  # Flag de controle
 
+        while self.timer_running:
+            s -= 1
+            self.remaining_time -= 1
+
+            if s == 0 and m == 0:
+                self.socketio.emit('timer', f'{m}:0{s}', namespace='/')
+                self.round += 1
+                break
+
+            elif s == 0:
+                s = 59
+                m -= 1
+
+            if s < 10:
+                self.socketio.emit('timer', f'{m}:0{s}', namespace='/')
             else:
-                self.socketio.emit('timer',str(m)+':'+str(s),namespace='/',)
+                self.socketio.emit('timer', f'{m}:{s}', namespace='/')
 
             self.socketio.sleep(1)
+        if s==0 and m==0:
+            self.socketio.emit('trocar', namespace='/')
+        self.time_run()
+
+
         
     def tramped(self,tramp:str):
         match tramp:

@@ -62,12 +62,17 @@ def selecionar_p(Request):
 
 @socketio.on('deal')
 def dar(request):
-    request['request']
+    
+
+
     carta = deal_card(mesa.deck_cards)
-    if request['request']== 'player1':
-        mesa.player_one.hand_C.append(carta[0])
-    else:
-        mesa.player_two.hand_C.append(carta[0])
+    try:
+        if request['request']== 'player1':
+            mesa.player_one.hand_C.append(carta[0])
+        else:
+            mesa.player_two.hand_C.append(carta[0])
+    except: emit('dei',{'numero_da_carta': None},broadcast=True);return
+
     emit('dei',{'numero_da_carta': carta[0]},broadcast=True)
 
 @socketio.on('max')
@@ -85,6 +90,10 @@ def limitador(Request):
         print('deck2 ',request['request'])
         emit('limit',{'soma':soma,'mesa':mesa.limit_burst},)
 
+@socketio.on('reset')
+def resetar_timer():
+    mesa.timer_running = False
+    
 
 
 
@@ -98,4 +107,4 @@ def delete_tutorial():
 
 if __name__ == '__main__':
     
-    socketio.run(app, debug=True, )#host='0.0.0.0'
+    socketio.run(app, debug=True,host='0.0.0.0' )#host='0.0.0.0'

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+
+    <link rel="stylesheet" href="..\styles\tutorial.css">
+    <link rel="stylesheet" href="..\styles\style-game.css">
+</head>
+<header>
+
+</header>
+
+
+
+<body>
+    <section id="jogadores">
+        <h3 id="menu">menu</h3>
+        <div>
+            <h3 id="jogador2" onclick="selecionar_p(this.innerText)">jogador-2</h3>
+            <h3 id="jogador1" onclick="selecionar_p(this.innerText)">jogador-1</h3>
+
+        </div>
+    </section>
+
+    <div id="aguarde" class="desligado" >
+        adversario fazendo jogada...
+    </div>
+
+
+    <section id="interaction">
+        <div id="inventario">
+            <h3>inventario</h3>
+            <div id="cartas_especiais">
+                <div class="carta_especial" onclick="usar_trunfo(this.innerText)">
+                    cartas especiais
+                </div>
+                <div class="carta_especial" onclick="usar_trunfo(this.innerText)">
+                    cartas especiais
+                </div>
+                <div class="carta_especial" onclick="usar_trunfo(this.innerText)">
+                    cartas especiais
+                </div>
+                <div class="carta_especial" onclick="usar_trunfo(this.innerText)">
+                    cartas especiais
+                </div>
+                <div class="carta_especial" onclick="usar_trunfo(this.innerText)">
+                    cartas especiais
+                </div>
+            </div>
+            <div id="descrição_carta">
+                <p>descrição da carta</p>
+            </div>
+        </div>
+
+        <div id="table">
+            <h3>Table</h3>
+            <div id="mesa-cartas">
+
+                <div class="p1-carteira" id="00"></div>
+                <div class="p1-carteira" id="01"></div>
+                <div class="p1-carteira" id="02"></div>
+                <div class="p1-carteira" id="03"></div>
+                <div class="p1-carteira" id="04"></div>
+                <div class="p1-carteira" id="05"></div>
+
+                <div id="vida1">❤️5</div>
+
+                <div id="ativabet1">
+                    <div class="carta_especial"></div>
+                </div>
+
+                <div id="ativamax1">
+                    <div class="carta_especial"></div>
+                </div>
+
+                <div id="baralho" onclick="mais_uma()">
+                    <div class="carta_pbaixo"></div>
+                    <div class="carta" id="bcard">?</div>
+                </div>
+                <div id="contador_d">
+                    <div id="ct1">💣-1</div>
+                    <div id="ct2">🩹+1</div>
+                </div>
+                <div id="limite-tempo">
+                    <div id="timer">⏲️ 0:00</div>
+                    <div id="limite">🃏 0/21</div>
+                </div>
+
+                <div id="ativabet2">
+                    <div class="carta_especial"></div>
+                </div>
+
+                <div id="ativamax2">
+                    <div class="carta_especial"></div>
+                </div>
+
+                <div id="vida2">💙5</div>
+
+
+                <div class="p2-carteira" id="10"></div>
+                <div class="p2-carteira" id="11"></div>
+                <div class="p2-carteira" id="12"></div>
+                <div class="p2-carteira" id="13"></div>
+                <div class="p2-carteira" id="14"></div>
+                <div class="p2-carteira" id="15"></div>
+
+            </div>
+        </div>
+    </section>
+</body>
+<script>
+    const socket = io();
+    roundp = 0
+    let i1 = 9
+    let i2 = -1
+
+    // if (Cookies.get(''))
+
+    
+
+    window.onload = socket.on('connect', () => {
+        socket.send('Usuário conectado ao socket!');
+        socket.emit('start_timer');
+        socket.emit('')
+
+        
+
+    });
+
+
+    socket.on('timer', (data) => {
+        document.getElementById('timer').innerText = `⏲️ ${data}`;
+    });
+    ado = 0
+    function atualizar_limite(){
+            if (Cookies.get('player1')){
+                cookie = Cookies.get('player1')
+            }
+            else if (Cookies.get('player2')){
+                cookie = Cookies.get('player2')}
+            else{
+                if(ado == 0){
+                    cookie = 'player1'
+                    ado++
+                }
+                if(ado == 1){
+                    cookie = 'player2'
+                    ado--
+                }
+            }
+            socket.emit('max',{'request':cookie})
+    }
+
+    socket.on('limit', (key)=>{
+        console.log(key.soma)
+        if (document.getElementById('10').classList.contains('p1-carteira')) {
+            document.getElementById('limite').innerText = `🃏${key.soma}/${key.mesa}`;
+        }
+        if (document.getElementById('10').classList.contains('p2-carteira')) {
+            document.getElementById('limite').innerText = `🃏${key.soma}/${key.mesa}`;
+        }
+
+    })
+
+    socket.on('start', (numero_da_carta) => {
+        console.log()
+    })
+
+    socket.on('mais_c',()=>{
+        mais_uma()
+    })
+    function mais_uma() {
+        if (Cookies.get('player1')){
+            cookie = Cookies.get('player1')
+        }
+        else{cookie = Cookies.get('player2')}
+        socket.emit('deal',{'request':cookie});
+    }
+
+    function trocar_jogador() {
+    const aguarde = document.getElementById('aguarde');
+    const isPlayer1 = Cookies.get('player1') === 'player1';
+    const isPlayer2 = Cookies.get('player2') === 'player2';
+
+    // Alterna o round
+    roundp = roundp === 0 ? 1 : 0;
+    console.log("Round atual:", roundp);
+
+    // Lógica de visibilidade
+    if ((isPlayer1 && roundp === 0) || (isPlayer2 && roundp === 1)) {
+        aguarde.classList.remove('ligado');
+        aguarde.classList.add('desligado');
+    } else {
+        aguarde.classList.remove('desligado');
+        aguarde.classList.add('ligado');
+    }
+    socket.emit('reset')
+    }
+    socket.on('trocar',()=>{
+        trocar_jogador()
+    })
+
+
+    socket.on('dei', numero_da_carta =>{
+
+        if (!numero_da_carta.numero_da_carta) {
+        console.log("Nenhuma carta recebida. Baralho pode estar vazio.");
+        return window.alert('acabou as cartas do baralho');
+        }
+
+        if(roundp){
+            i1++
+            console.log(String(numero_da_carta));
+            const novaDiv = document.createElement('div');
+            novaDiv.className = 'carta';
+            novaDiv.innerText = numero_da_carta.numero_da_carta;
+            if (i1 == 10) {
+                novaDiv.className = 'carta_pbaixo'
+                if(document.getElementById('10').className =='p1-carteira'){
+                    novaDiv.style.color= 'transparent'
+                }
+            }
+            document.getElementById(String(i1)).appendChild(novaDiv);
+            atualizar_limite()
+        }else{
+            i2++
+            console.log(String(numero_da_carta));
+            const novaDiv = document.createElement('div');
+            novaDiv.className = 'carta';
+            novaDiv.innerText = numero_da_carta.numero_da_carta;
+            if (i2 == 0) {
+                novaDiv.className = 'carta_pbaixo'
+                if(document.getElementById('00').className =='p1-carteira'){
+                    novaDiv.style.color= 'transparent'
+                }
+            }
+            document.getElementById("0"+String(i2)).appendChild(novaDiv);
+            atualizar_limite()
+        }
+        if(Cookies.get('player1') && roundp==1){
+            document.getElementById('aguarde').className = 'ligado'
+        }else if(Cookies.get('player2') && roundp==0){
+            document.getElementById('aguarde').className = 'ligado'
+        }
+        ver_vitoria=0
+        trocar_jogador()
+    })
+
+
+    function usar_trunfo(nome_trunfo) {
+        console.log(nome_trunfo)
+    }
+
+
+    p = 0
+
+    rmp1 = socket.on('delete_player1',()=> {
+        document.getElementById('jogador1').remove()
+        
+    })
+    rmp2 = socket.on('delete_player2',()=> {
+        document.getElementById('jogador2').remove()
+    })
+    rmp = socket.on('delete_players',()=>{
+        document.getElementById('jogadores').remove()
+        
+    })
+        
+    function selecionar_p(player) {
+        if(!(Cookies.get('player1')) && !(Cookies.get('player2'))){
+
+            if(player == 'jogador-1'){player = 'jogador1'}
+            else if(player == 'jogador-2'){player = 'jogador2'}
+            cookie = ''
+            if(Cookies.get('player1')){cookie=Cookies.get('player1')}
+            if(Cookies.get('player2')){cookie=Cookies.get('player2')}
+            socket.emit('selecionar_p', { 'player': player,'cookie':cookie  }, () => {
+                p++
+
+                if (p == 2) {
+                    rmp()
+
+
+                }
+                if (player == 'jogador2') {
+                    Cookies.set('player2', 'player2',{expires:1,path: '/' })
+                    rmp2()
+
+                }
+
+                else if (player == 'jogador1') {
+                    Cookies.set('player1', 'player1',{expires:1,path: '/' })
+                    document.getElementById('00').className = 'p2-carteira'
+                    document.getElementById('01').className = 'p2-carteira'
+                    document.getElementById('02').className = 'p2-carteira'
+                    document.getElementById('03').className = 'p2-carteira'
+                    document.getElementById('04').className = 'p2-carteira'
+                    document.getElementById('05').className = 'p2-carteira'
+
+                    document.getElementById('10').className = 'p1-carteira'
+                    document.getElementById('11').className = 'p1-carteira'
+                    document.getElementById('12').className = 'p1-carteira'
+                    document.getElementById('13').className = 'p1-carteira'
+                    document.getElementById('14').className = 'p1-carteira'
+                    document.getElementById('15').className = 'p1-carteira'
+                    rmp1()
+                    
+        
+                }
+            })
+        }
+    }
+
+    window.onload = ()=>{
+        if ((Cookies.get('player2') || Cookies.get('player1')) && document.getElementById('jogadores') ){
+
+            document.getElementById('jogadores').remove()
+        };
+    }
+    ver_vitoria = 0
+    document.addEventListener('keydown', function(event) {
+      if (event.key === ' ' && document.getElementById('aguarde').className == 'desligado') {
+        socket.emit('space')
+        ver_vitoria++
+      }
+    });
+
+</script>
+
+
+</html>

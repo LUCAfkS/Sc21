@@ -1,0 +1,464 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+ 
+body {
+    background-color: green;
+}
+
+
+
+#interaction {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    position: relative;
+    margin: 10px;
+
+
+}
+
+#table {
+    margin: 15px;
+    width: 750px;
+    height: 500px;
+    background-color: rgb(58, 207, 58);
+    border-radius: 11px;
+
+
+}
+
+#mesa-cartas {
+    width: auto;
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(6, 36px);
+    grid-template-rows: 65px 66px 66px 66px;
+    justify-content: center;
+    margin: 24px;
+    gap: 6px;
+
+}
+
+#table h3 {
+    font-size: 16px;
+    text-align: center;
+    color: rgb(39, 9, 121);
+    background-color: aquamarine;
+    border-radius: 11px 2px;
+    height: 21px;
+}
+
+.carta_especial {
+    display: flex;
+    padding: 3px;
+    width: 90px;
+    height: 90px;
+    
+    background-color: brown;
+    border: 3px solid black;
+    border-radius: 8px;
+
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+.carta_especial:hover{
+    transform: scale(1.1);
+}
+
+#ativamax2{
+    height: auto;
+    width: auto;
+    grid-column: 6;
+    grid-row: 2;
+    display: flex;
+    align-items: center;
+}
+#ativamax2 .carta_especial{
+    width: 30px;
+    height: 30px;
+    border-width: 1.8px;
+    border-radius: 6px;
+    cursor: initial;
+}
+#ativamax2 .carta_especial:hover{
+    transform:scale(1);
+}
+#ativabet2{
+    height: auto;
+    width: auto;
+    grid-column: 5;
+    grid-row: 2;
+    display: flex;
+    align-items: center;
+}
+#ativabet2 .carta_especial{
+    width: 30px;
+    height: 30px;
+    border-width: 1.8px;
+    border-radius: 6px;
+    cursor: initial;
+}
+#ativabet2 .carta_especial:hover{
+    transform:scale(1);
+}
+#ativamax1{
+    height: auto;
+    width: auto;
+    grid-column: 1;
+    grid-row: 4;
+    display: flex;
+    align-items: center;
+}
+#ativamax1 .carta_especial{
+    width: 30px;
+    height: 30px;
+    border-width: 1.8px;
+    border-radius: 6px;
+    cursor: initial;
+}
+#ativamax1 .carta_especial:hover{
+    transform:scale(1);
+}
+#ativabet1{
+    height: auto;
+    width: auto;
+    grid-column: 2;
+    grid-row: 4;
+    display: flex;
+    align-items: center;
+}
+#ativabet1 .carta_especial{
+    width: 30px;
+    height: 30px;
+    border-width: 1.8px;
+    border-radius: 6px;
+    cursor: initial;
+}
+#ativabet1 .carta_especial:hover{
+    transform:scale(1);
+}
+
+
+#inventario {
+    /* display: flex;
+    flex-direction: column;
+    justify-content: space-between; */
+    display: grid;
+    grid-template-rows: 0.2fr 2fr 2fr;
+    grid-template-areas:
+        "cabecario"
+        "cartas"
+        "descricao";
+
+    margin: 15px;
+    width: 250px;
+    height: 500px;
+    background-color: rgb(58, 207, 58);
+    border-radius: 11px;
+
+}
+
+#inventario h3 {
+    grid-area: cabecario;
+
+    font-size: 16px;
+    text-align: center;
+    color: rgb(39, 9, 121);
+    background-color: aquamarine;
+    border-radius: 11px 2px;
+    height: 21px;
+}
+
+#descrição_carta {
+    height: auto;
+    border-radius: 0px 0px 11px 11px;
+    color: aliceblue;
+    background-color: rgba(0, 0, 0, 0.5);
+
+
+}
+
+#cartas_especiais {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-self: center;
+    gap: 12px;
+    margin: 6px;
+    padding: 8px;
+
+    
+    overflow-y: scroll;
+    
+}
+
+
+#descrição_carta p {
+    grid-area: descricao;
+    padding: 6px;
+}
+
+#cartas_especiais::-webkit-scrollbar {
+    background-color: transparent;
+    width: 0;
+}
+
+.p2-carteira {
+    border: 2px solid white;
+    border-radius: 3px;
+    background-color: transparent;
+    width: 35px;
+    height: 65px;
+    grid-row: 5;
+}
+
+.p1-carteira {
+    border: 2px solid white;
+    border-radius: 3px;
+    background-color: transparent;
+    width: 35px;
+    height: 65px;
+    grid-row: 1;
+}
+
+@keyframes spawn2{
+    from {
+    transform: translateY(-10px);
+  }
+    to {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes spawn1{
+    from {
+    transform: translateY(10px);
+  }
+    to {
+    transform: translateY(0px);
+  }
+}
+.p1-carteira .carta_pbaixo{
+    animation: spawn1 0.5s ease;
+}
+
+.p1-carteira .carta{
+    animation: spawn1 0.5s ease;
+}
+
+.p2-carteira .carta_pbaixo{
+    animation: spawn2 0.5s ease;
+}
+
+.p2-carteira .carta{
+    animation: spawn2 0.5s ease;
+}
+
+
+
+#contador_d {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid white;
+    border-radius: 3px;
+    background-color: transparent;
+    width: 50px;
+    height: 65px;
+    grid-column: 4;
+    grid-row: 3;
+}
+
+#ct1 {
+    color: rgb(212, 47, 140);
+    background-color: black;
+    border-bottom: 2px solid white;
+    width: 50px;
+    height: 32.5px;
+    display: flex;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    
+}
+
+#vida1 {
+    color: rgb(226, 34, 34);
+    background-color: black;
+    width: 50px;
+    height: 32.5px;
+    grid-column: 6;
+    grid-row: 4;
+    border: 2px solid white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: flex-end;
+    text-align: center;
+
+    position: relative;
+    right: 15px;
+    top: 4px;
+}
+
+#ct2 {
+    color: rgb(43, 255, 0);
+    background-color: black;
+    width: 50px;
+    height: 32.5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    
+}
+
+#vida2 {
+    color: rgb(19, 134, 235);
+    background-color: black;
+    width: 50px;
+    height: 32.5px;
+    grid-column: 1;
+    grid-row: 2;
+    border: 2px solid white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.carta_pbaixo {
+    width: 35px;
+    height: 65px;
+    background-image: url('img/back-card.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 150%;
+    border-radius: 2px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+
+.carta {
+    width: 35px;
+    height: 65px;
+    background-color: rgb(211, 191, 162);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+#limite-tempo {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid white;
+    border-radius: 3px;
+    background-color: transparent;
+    width: 50px;
+    height: 65px;
+    grid-column: 1;
+    grid-row: 3;
+}
+
+#timer {
+    color: rgb(255, 255, 255);
+    background-color: black;
+    border-bottom: 2px solid white;
+    width: 50px;
+    height: 32.5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    font-size: small;
+}
+
+#limite {
+    color: rgb(255, 255, 255);
+    background-color: black;
+    width: 50px;
+    height: 32.5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    font-size: small;
+}
+
+#baralho {
+  perspective: 1000px;
+  border: 2px solid rgba(224, 13, 13, 0.8);
+  width: 35px;
+  height: 65px;
+  grid-column: 3;
+  grid-row: 3;
+  background-image: url('img/back-card.png');
+  background-size: 150%;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+#baralho .carta_pbaixo:hover{
+    transform: translateY(4px);
+
+}
+
+#baralho .carta_pbaixo,
+#baralho .carta {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  transition: transform 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Frente da carta (visível inicialmente) */
+#baralho .carta_pbaixo {
+  z-index: 2;
+  background-color: crimson;
+}
+
+/* Verso da carta (oculto inicialmente) */
+#baralho .carta {
+  transform: rotateY(180deg);
+}
+
+/* Quando o usuário clica e segura */
+#baralho:active .carta_pbaixo {
+  transform: rotateY(180deg);
+}
+
+#baralho:active .carta {
+  transform: rotateY(0deg);
+}
+
+
+
+@media (max-width: 900px) {
+    #interaction {
+        flex-direction: column-reverse;
+    }
+
+    #table {
+        width: 94%;
+    }
+}

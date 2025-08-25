@@ -1,0 +1,88 @@
+body{
+overflow: scroll;
+}
+#jogadores{
+    color: azure;
+    font-size: 10px;
+    position: absolute;
+    z-index: 1001;
+    background-color: rgba(0,0,0,0.6);
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+
+}
+#jogadores div{
+    position: relative;
+    height: 100%;
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between  ;
+    align-items: center;
+    bottom: 150px;
+}
+
+#menu{
+    padding-top: 12px;
+    position: relative;
+    top: 150px;
+    font-size: 32px;
+    background-color: rgba(0,0,0,0.6);
+    width: 300px;
+    display: flex;
+    justify-content: center;
+    height: 300px;
+    border-radius: 15px;
+}
+#jogador1{
+    font-size: 15px;
+    background-color: rgb(142, 30, 30);
+    padding: 14px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: scale 0.3s ease ;
+    
+}
+#jogador1:hover{
+    scale: 1.1;
+}
+#jogador2{
+    font-size: 15px;
+    background-color: rgb(142, 30, 30);
+    padding: 14px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: scale 0.3s ease ;
+}
+#jogador2:hover{
+    scale: 1.1;
+}
+#aguarde{
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 100vw;
+    height: 100vh;
+
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1s ease;
+    z-index: 9999;
+}
+
+.ligado{
+    opacity: 1;
+    display: flex;
+}
+.desligado{
+    opacity: 0;
+    display: none;
+}
+

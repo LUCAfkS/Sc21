@@ -78,11 +78,11 @@ def limitador(Request):
     print('p2',mesa.player_two.hand_C)
     if request['request'] == 'player1':
         for cs in mesa.player_one.hand_C: soma+=cs
-        print(request['request'])
+        print('deck1 ',request['request'])
         emit('limit',{'soma':soma,'mesa':mesa.limit_burst},)
     elif request['request'] == 'player2':
         for cs in mesa.player_two.hand_C: soma+=cs
-        print(request['request'])
+        print('deck2 ',request['request'])
         emit('limit',{'soma':soma,'mesa':mesa.limit_burst},)
 
 

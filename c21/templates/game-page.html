@@ -150,7 +150,7 @@
                     ado++
                 }
                 if(ado == 1){
-                    cookie = 'player1'
+                    cookie = 'player2'
                     ado--
                 }
             }
@@ -159,7 +159,13 @@
 
     socket.on('limit', (key)=>{
         console.log(key.soma)
-        document.getElementById('limite').innerText = `🃏${key.soma}/${key.mesa}`;
+        if (document.getElementById('10').classList.contains('p1-carteira')) {
+            document.getElementById('limite').innerText = `🃏${key.soma}/${key.mesa}`;
+        }
+        if (document.getElementById('10').classList.contains('p2-carteira')) {
+            document.getElementById('limite').innerText = `🃏${key.soma}/${key.mesa}`;
+        }
+
     })
 
     socket.on('start', (numero_da_carta) => {
@@ -207,6 +213,9 @@
             novaDiv.innerText = numero_da_carta.numero_da_carta;
             if (i1 == 10) {
                 novaDiv.className = 'carta_pbaixo'
+                if(document.getElementById('10').className =='p1-carteira'){
+                    novaDiv.style.color= 'transparent'
+                }
             }
             document.getElementById(String(i1)).appendChild(novaDiv);
             atualizar_limite()
@@ -218,6 +227,9 @@
             novaDiv.innerText = numero_da_carta.numero_da_carta;
             if (i2 == 0) {
                 novaDiv.className = 'carta_pbaixo'
+                if(document.getElementById('00').className =='p1-carteira'){
+                    novaDiv.style.color= 'transparent'
+                }
             }
             document.getElementById("0"+String(i2)).appendChild(novaDiv);
             atualizar_limite()

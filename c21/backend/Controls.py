@@ -62,10 +62,10 @@ def selecionar_p(Request):
 
 @socketio.on('deal')
 def dar(request):
-    
-
+    print(f"[DEBUG] Cartas no deck antes de dar: {len(mesa.deck_cards.cards_list)}")
 
     carta = deal_card(mesa.deck_cards)
+    print(carta)
     try:
         if request['request']== 'player1':
             mesa.player_one.hand_C.append(carta[0])
@@ -105,6 +105,79 @@ def delete_tutorial():
 def espaçado():
     emit('trocar',broadcast=True)
 
+@socketio.on('ver_t')
+def ver_v():
+    emit('vitoria',broadcast=True)
+
+@socketio.on('contar_pontos')
+def dar_resultado():
+    if sum(mesa.player_two.hand_C) >21 and sum(mesa.player_one.hand_C) >21:
+        a = mesa.player_one.hand_C
+        k = mesa.player_two.hand_C
+        mesa.player_two.hand_C = a
+        mesa.player_one.hand_C = k
+
+    if sum(mesa.player_one.hand_C) >21: 
+        mesa.player_one.hand_C.append(-21)
+    if sum(mesa.player_two.hand_C) >21: 
+        mesa.player_two.hand_C.append(-21)
+
+
+        
+
+    if sum(mesa.player_one.hand_C) == sum(mesa.player_two.hand_C):
+        mesa.resetar_r()
+
+        emit('resetar_c',broadcast=True)
+        sleep(1)
+        for i in ['player1','player2','player1','player2']:
+            b={'request':i}
+            dar(b)
+    elif sum(mesa.player_one.hand_C) < sum(mesa.player_two.hand_C):
+        mesa.resetar_r()
+        
+        mesa.player_one.life -=mesa.value_round
+        mesa.player_two.life +=mesa.value_round
+        mesa.value_round+=1
+        emit('at_dano',{'dano':mesa.value_round},broadcast=True)
+
+        vida2 = mesa.player_one.life
+        vida1 = mesa.player_two.life
+
+        emit('resetar_c',broadcast=True)
+        sleep(1)
+        emit('diminuir_v',{'jogador':'player1','vida2':vida2,'vida1':vida1},broadcast=True)
+        if not(mesa.player_one.life <=0) or not(mesa.player_two.life <=0):
+            # for i in ['player1','player2','player1','player2']:
+            #     b={'request':i}
+            #     dar(b)
+            pass
+        else:
+            emit('finalizar_jogo',broadcast=True)
+            pass
+    else:
+        mesa.resetar_r()
+
+        mesa.player_two.life -=mesa.value_round
+        mesa.player_one.life +=mesa.value_round
+        mesa.value_round+=1
+        emit('at_dano',{'dano':mesa.value_round},broadcast=True)
+
+        vida2 = mesa.player_one.life
+        vida1 = mesa.player_two.life
+
+
+        emit('resetar_c',broadcast=True)
+        sleep(1)
+        emit('diminuir_v',{'jogador':'player2','vida1':vida1,'vida2':vida2},broadcast=True)
+        if not(mesa.player_one.life <=0) or not(mesa.player_two.life <=0):
+            # for i in ['player1','player2','player1','player2']:
+            #     b={'request':i}
+            #     dar(b)
+            pass
+        else:
+            emit('finalizar_jogo',broadcast=True)
+            pass
 
 
 if __name__ == '__main__':

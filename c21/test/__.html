@@ -1,21 +1,14 @@
 <!DOCTYPE html>
-
-<html lang="pt-br">
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8">
-  <title>Teclado como gatilho</title>
+    <title>Document</title>
+    <link rel="stylesheet" href="__.css">
 </head>
 <body>
-  <h1>Pressione qualquer tecla</h1>
-  <script>
-    document.addEventListener('keydown', function(event) {
-      if (event.key === ' ') {
-        alert('Você pressionou Enter!');
-      } else {
-        console.log(`Tecla pressionada: ${event.key}`);
-      }
-    });
-  </script>
+    <div id="aguarde" class="desligado" >
+        adversario fazendo jogada...
+    </div>
 </body>
 </html>

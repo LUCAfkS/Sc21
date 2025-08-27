@@ -321,15 +321,77 @@
         if ((Cookies.get('player2') || Cookies.get('player1')) && document.getElementById('jogadores') ){
 
             document.getElementById('jogadores').remove()
-        };
+
+            
+        
+        }
+        if (Cookies.get('player1')){     
+            document.getElementById('00').className = 'p2-carteira'
+            document.getElementById('01').className = 'p2-carteira'
+            document.getElementById('02').className = 'p2-carteira'
+            document.getElementById('03').className = 'p2-carteira'
+            document.getElementById('04').className = 'p2-carteira'
+            document.getElementById('05').className = 'p2-carteira'
+
+            document.getElementById('10').className = 'p1-carteira'
+            document.getElementById('11').className = 'p1-carteira'
+            document.getElementById('12').className = 'p1-carteira'
+            document.getElementById('13').className = 'p1-carteira'
+            document.getElementById('14').className = 'p1-carteira'
+            document.getElementById('15').className = 'p1-carteira'
+        }
     }
     ver_vitoria = 0
     document.addEventListener('keydown', function(event) {
-      if (event.key === ' ' && document.getElementById('aguarde').className == 'desligado') {
-        socket.emit('space')
-        ver_vitoria++
+        if (event.key === ' ' && document.getElementById('aguarde').className == 'desligado') {
+            socket.emit('space')
+            socket.emit('ver_t')
+        
+        
       }
     });
+    socket.on('vitoria',()=>{
+        ver_vitoria++
+        if(ver_vitoria ==2){
+            socket.emit('contar_pontos')
+        }
+    })
+    socket.on('resetar_c', ()=>{
+        a = roundp
+        location.reload()
+        roundp = a
+        
+    });
+    socket.on('diminuir_v', data =>{
+        // if (data.jogador == 'player1'){
+        //     if (Cookies.get('player1')){
+        //     document.getElementById('vida2').innerText = `💙${String(data.vida1)}`
+        //     }
+        //     else{
+        //         document.getElementById('vida1').innerText = `❤️${String(data.vida2)}`
+
+        //     }
+        // }
+        if (data.jogador == 'player2'){
+            if (Cookies.get('player2')){
+                document.getElementById('vida2').innerText = `💙${String(data.vida2)}`
+                document.getElementById('vida1').innerText = `❤️${String(data.vida1)}`
+            }
+            else{
+                document.getElementById('vida1').innerText = `❤️${String(data.vida2)}`
+                document.getElementById('vida2').innerText = `💙${String(data.vida1)}`
+
+            }
+        }
+    })
+    socket.on('at_dano',dado=>{
+            document.getElementById('ct1').innerText = `💣-${dado.dano}`
+            document.getElementById('ct2').innerText = `🩹+${dado.dano}`
+    })
+    socket.on('finalizar_jogo',()=>{
+        window.location.href = 'https://thaka.bing.com/th/id/OIP.1Z5dM84AUfJXMm6GIsVOyAHaFW?w=218&h=180&c=7&r=0&o=7&cb=thfvnext&pid=1.7&rm=3'
+    })
+    
 
 </script>
 

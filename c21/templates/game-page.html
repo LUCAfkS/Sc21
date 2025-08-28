@@ -122,7 +122,13 @@
 
     // if (Cookies.get(''))
 
-    
+    function sleep(ms) {
+        const end = Date.now() + ms;
+        while (Date.now() < end) {
+            // Espera ocupada (busy wait)
+        }
+    }
+
 
     window.onload = socket.on('connect', () => {
         socket.send('Usuário conectado ao socket!');
@@ -158,7 +164,6 @@
     }
 
     socket.on('limit', (key)=>{
-        console.log(key.soma)
         if (document.getElementById('10').classList.contains('p1-carteira')) {
             document.getElementById('limite').innerText = `🃏${key.soma}/${key.mesa}`;
         }
@@ -169,7 +174,6 @@
     })
 
     socket.on('start', (numero_da_carta) => {
-        console.log()
     })
 
     socket.on('mais_c',()=>{
@@ -190,7 +194,6 @@
 
     // Alterna o round
     roundp = roundp === 0 ? 1 : 0;
-    console.log("Round atual:", roundp);
 
     // Lógica de visibilidade
     if ((isPlayer1 && roundp === 0) || (isPlayer2 && roundp === 1)) {
@@ -210,13 +213,11 @@
     socket.on('dei', numero_da_carta =>{
 
         if (!numero_da_carta.numero_da_carta) {
-        console.log("Nenhuma carta recebida. Baralho pode estar vazio.");
         return window.alert('acabou as cartas do baralho');
         }
 
         if(roundp){
             i1++
-            console.log(String(numero_da_carta));
             const novaDiv = document.createElement('div');
             novaDiv.className = 'carta';
             novaDiv.innerText = numero_da_carta.numero_da_carta;
@@ -230,7 +231,6 @@
             atualizar_limite()
         }else{
             i2++
-            console.log(String(numero_da_carta));
             const novaDiv = document.createElement('div');
             novaDiv.className = 'carta';
             novaDiv.innerText = numero_da_carta.numero_da_carta;
@@ -254,23 +254,31 @@
 
 
     function usar_trunfo(nome_trunfo) {
-        console.log(nome_trunfo)
+        jogador_at = Cookies.get('player1') ? 'player1' : 'player2'
+        socket.emit('u_taramp',{'jogador':jogador_at,'nome_t':nome_trunfo})
     }
 
 
     p = 0
+function rmp1() {
+  const el = document.getElementById('jogador1');
+  if (el) el.remove();
+}
 
-    rmp1 = socket.on('delete_player1',()=> {
-        document.getElementById('jogador1').remove()
-        
-    })
-    rmp2 = socket.on('delete_player2',()=> {
-        document.getElementById('jogador2').remove()
-    })
-    rmp = socket.on('delete_players',()=>{
-        document.getElementById('jogadores').remove()
-        
-    })
+function rmp2() {
+  const el = document.getElementById('jogador2');
+  if (el) el.remove();
+}
+
+function rmp() {
+  const el = document.getElementById('jogadores');
+  if (el) el.remove();
+}
+socket.on('delete_player1', rmp1);
+socket.on('delete_player2', rmp2);
+socket.on('delete_players', rmp);
+
+
         
     function selecionar_p(player) {
         if(!(Cookies.get('player1')) && !(Cookies.get('player2'))){
@@ -347,43 +355,52 @@
             socket.emit('space')
             socket.emit('ver_t')
         
-        
       }
+        if (event.key === 'Enter' && document.getElementById('aguarde').className == 'desligado') {mais_uma()}
     });
-    socket.on('vitoria',()=>{
-        ver_vitoria++
-        if(ver_vitoria ==2){
-            socket.emit('contar_pontos')
+    socket.on('vitoria', () => {
+        ver_vitoria++;
+        if (ver_vitoria === 2) {
+            const cardizinhos = document.getElementsByClassName('carta_pbaixo');
+            for (let i = 0; i < cardizinhos.length; i++) {
+                const carta = cardizinhos[i];
+                if (carta) {
+                    carta.className = 'carta';
+                    carta.style.color = 'black';
+                }
+            }
+            socket.emit('contar_pontos');
         }
-    })
+    });
+
     socket.on('resetar_c', ()=>{
         a = roundp
+        
+
         location.reload()
         roundp = a
         
     });
-    socket.on('diminuir_v', data =>{
-        // if (data.jogador == 'player1'){
-        //     if (Cookies.get('player1')){
-        //     document.getElementById('vida2').innerText = `💙${String(data.vida1)}`
-        //     }
-        //     else{
-        //         document.getElementById('vida1').innerText = `❤️${String(data.vida2)}`
-
-        //     }
-        // }
-        if (data.jogador == 'player2'){
-            if (Cookies.get('player2')){
-                document.getElementById('vida2').innerText = `💙${String(data.vida2)}`
-                document.getElementById('vida1').innerText = `❤️${String(data.vida1)}`
-            }
-            else{
-                document.getElementById('vida1').innerText = `❤️${String(data.vida2)}`
-                document.getElementById('vida2').innerText = `💙${String(data.vida1)}`
-
-            }
+    socket.on('diminuir_v', data => {
+    if (data.jogador == 'player2') {
+        if (Cookies.get('player2')) {
+            document.getElementById('vida2').innerText = `💙${String(data.vida2)}`
+            document.getElementById('vida1').innerText = `❤️${String(data.vida1)}`
+        } else {
+            document.getElementById('vida1').innerText = `❤️${String(data.vida2)}`
+            document.getElementById('vida2').innerText = `💙${String(data.vida1)}`
         }
+    } else if (data.jogador == 'player1') {
+        if (Cookies.get('player1')) {
+            document.getElementById('vida1').innerText = `❤️${String(data.vida1)}`
+            document.getElementById('vida2').innerText = `💙${String(data.vida2)}`
+        } else {
+            document.getElementById('vida2').innerText = `💙${String(data.vida1)}`
+            document.getElementById('vida1').innerText = `❤️${String(data.vida2)}`
+        }
+        }   
     })
+
     socket.on('at_dano',dado=>{
             document.getElementById('ct1').innerText = `💣-${dado.dano}`
             document.getElementById('ct2').innerText = `🩹+${dado.dano}`

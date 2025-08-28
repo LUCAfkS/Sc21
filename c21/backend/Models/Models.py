@@ -56,55 +56,53 @@ class Player:
         self.hand_C = []
         self.hand_T = []
     
-    def use_taramp(self,table: 'Table',recipient: 'Player', taramp: str):
-        if taramp in self.hand_T:
-            match taramp:
+def use_taramp(self,table: 'Table',recipient: 'Player', taramp: str):
+    if taramp in self.hand_T:
+        match taramp:
 
-                case 'bet': 
-                    return 1
+            case 'bet': 
+                table.value_round+=1
+                table.socketio.emit('at_dano',namespace='/')
 
-
-                case 'betbet':
-                    return 2
-
-
-                case 'shield':
-                    return -1
+            case 'betbet':
+                table.value_round+=2
+                table.socketio.emit('at_dano',namespace='/')
 
 
-                case 'rebirth':
-                    return 0
+            case 'shield':
+                table.value_round-=1
+                table.socketio.emit('at_dano',namespace='/')
 
 
-                case 'due-tramps':
-                    return 
+            case 'due-tramps':
+                return 
 
 
-                case 'erase-your':
-                    return
+            case 'erase-your':
+                return
 
 
-                case 'especial-bet':
-                    return
+            case 'especial-bet':
+                return
 
 
-                case 'exchange':
-                    return
+            case 'exchange':
+                return
 
 
-                case 'refresh':
-                    return
+            case 'refresh':
+                return
 
-                case 'for-17':
-                    return 17
-
-
-                case 'for-24':
-                    return 24
+            case 'for-17':
+                return 17
 
 
-                case _:
-                    pass
+            case 'for-24':
+                return 24
+
+
+            case _:
+                pass
 
 class Table:
     

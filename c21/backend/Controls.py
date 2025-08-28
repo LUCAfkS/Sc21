@@ -3,7 +3,7 @@ from flask_socketio import SocketIO, emit
 from time import sleep
 from threading import Thread
 
-from Models.Models import deal_card
+from Models.Models import deal_card, use_taramp
 import Models.Models as mm
 
 
@@ -45,16 +45,13 @@ def selecionar_p(Request):
             mesa.p1 = player
             emit('delete_player1',broadcast=True)
             emit('delete_players')
-            print(mesa.p1)
 
         elif player == 'jogador2':
             mesa.p2 = player
             emit('delete_player2',broadcast=True)
             emit('delete_players')
-            print(mesa.p2)
 
         if mesa.p1 and mesa.p2:
-            print('começou')
             start_game()
     
     else: emit('delete_players')
@@ -62,10 +59,8 @@ def selecionar_p(Request):
 
 @socketio.on('deal')
 def dar(request):
-    print(f"[DEBUG] Cartas no deck antes de dar: {len(mesa.deck_cards.cards_list)}")
 
     carta = deal_card(mesa.deck_cards)
-    print(carta)
     try:
         if request['request']== 'player1':
             mesa.player_one.hand_C.append(carta[0])
@@ -79,15 +74,11 @@ def dar(request):
 def limitador(Request):
     request = Request
     soma=0
-    print('p1',mesa.player_one.hand_C)
-    print('p2',mesa.player_two.hand_C)
     if request['request'] == 'player1':
         for cs in mesa.player_one.hand_C: soma+=cs
-        print('deck1 ',request['request'])
         emit('limit',{'soma':soma,'mesa':mesa.limit_burst},)
     elif request['request'] == 'player2':
         for cs in mesa.player_two.hand_C: soma+=cs
-        print('deck2 ',request['request'])
         emit('limit',{'soma':soma,'mesa':mesa.limit_burst},)
 
 @socketio.on('reset')
@@ -109,75 +100,85 @@ def espaçado():
 def ver_v():
     emit('vitoria',broadcast=True)
 
+def emitir_reset():
+    sleep(4)
+    emit('resetar_c', broadcast=True)
+
+
 @socketio.on('contar_pontos')
 def dar_resultado():
-    if sum(mesa.player_two.hand_C) >21 and sum(mesa.player_one.hand_C) >21:
-        a = mesa.player_one.hand_C
-        k = mesa.player_two.hand_C
-        mesa.player_two.hand_C = a
-        mesa.player_one.hand_C = k
+    limite = mesa.limit_burst
+    soma1 = sum(mesa.player_one.hand_C)
+    soma2 = sum(mesa.player_two.hand_C)
 
-    if sum(mesa.player_one.hand_C) >21: 
-        mesa.player_one.hand_C.append(-21)
-    if sum(mesa.player_two.hand_C) >21: 
-        mesa.player_two.hand_C.append(-21)
+    estourou1 = soma1 > limite
+    estourou2 = soma2 > limite
 
+    # Aplica penalidade visual se estourar
+    if estourou1:
+        mesa.player_one.hand_C.append(-limite)
+        soma1 = sum(mesa.player_one.hand_C)
+    if estourou2:
+        mesa.player_two.hand_C.append(-limite)
+        soma2 = sum(mesa.player_two.hand_C)
 
-        
-
-    if sum(mesa.player_one.hand_C) == sum(mesa.player_two.hand_C):
+    # Empate absoluto
+    if not estourou1 and not estourou2 and soma1 == soma2:
         mesa.resetar_r()
-
-        emit('resetar_c',broadcast=True)
+        emitir_reset()
         sleep(1)
-        for i in ['player1','player2','player1','player2']:
-            b={'request':i}
-            dar(b)
-    elif sum(mesa.player_one.hand_C) < sum(mesa.player_two.hand_C):
-        mesa.resetar_r()
-        
-        mesa.player_one.life -=mesa.value_round
-        mesa.player_two.life +=mesa.value_round
-        mesa.value_round+=1
-        emit('at_dano',{'dano':mesa.value_round},broadcast=True)
+        for i in ['player1', 'player2', 'player1', 'player2']:
+            dar({'request': i})
+        return
 
-        vida2 = mesa.player_one.life
-        vida1 = mesa.player_two.life
-
-        emit('resetar_c',broadcast=True)
-        sleep(1)
-        emit('diminuir_v',{'jogador':'player1','vida2':vida2,'vida1':vida1},broadcast=True)
-        if not(mesa.player_one.life <=0) or not(mesa.player_two.life <=0):
-            # for i in ['player1','player2','player1','player2']:
-            #     b={'request':i}
-            #     dar(b)
-            pass
-        else:
-            emit('finalizar_jogo',broadcast=True)
-            pass
+    # Caso 1: apenas player1 estourou
+    if estourou1 and not estourou2:
+        vencedor = 'player2'
+    # Caso 2: apenas player2 estourou
+    elif estourou2 and not estourou1:
+        vencedor = 'player1'
+    # Caso 3: nenhum estourou — vence quem estiver mais próximo do limite
+    elif not estourou1 and not estourou2:
+        vencedor = 'player1' if (limite - soma1) < (limite - soma2) else 'player2'
+    # Caso 4: ambos estouraram — vence quem estourou menos
     else:
-        mesa.resetar_r()
+        vencedor = 'player1' if (soma1 - limite) < (soma2 - limite) else 'player2'
 
-        mesa.player_two.life -=mesa.value_round
-        mesa.player_one.life +=mesa.value_round
-        mesa.value_round+=1
-        emit('at_dano',{'dano':mesa.value_round},broadcast=True)
+    # Aplica resultado
+    mesa.resetar_r()
+    dano = mesa.value_round
+    mesa.value_round += 1
 
-        vida2 = mesa.player_one.life
+    if vencedor == 'player1':
+        mesa.player_one.life += dano
+        mesa.player_two.life -= dano
         vida1 = mesa.player_two.life
-
-
-        emit('resetar_c',broadcast=True)
+        vida2 = mesa.player_one.life
+        emitir_reset()
         sleep(1)
-        emit('diminuir_v',{'jogador':'player2','vida1':vida1,'vida2':vida2},broadcast=True)
-        if not(mesa.player_one.life <=0) or not(mesa.player_two.life <=0):
-            # for i in ['player1','player2','player1','player2']:
-            #     b={'request':i}
-            #     dar(b)
-            pass
-        else:
-            emit('finalizar_jogo',broadcast=True)
-            pass
+        emit('at_dano', {'dano': dano}, broadcast=True)
+        emit('diminuir_v', {'jogador': 'player2', 'vida1': vida1, 'vida2': vida2}, broadcast=True)
+    else:
+        mesa.player_two.life += dano
+        mesa.player_one.life -= dano
+        vida1 = mesa.player_two.life
+        vida2 = mesa.player_one.life
+        emitir_reset()
+        sleep(1)
+        emit('at_dano', {'dano': dano}, broadcast=True)
+        emit('diminuir_v', {'jogador': 'player1', 'vida1': vida1, 'vida2': vida2}, broadcast=True)
+
+    # Verifica fim de jogo
+    if vida1 <= 0 or vida2 <= 0:
+        emit('finalizar_jogo', broadcast=True)
+
+
+@socketio.on('u_taramp')
+def us_taramp(data):
+    if data.jogador_at == 'player1':
+        use_taramp()
+    
+
 
 
 if __name__ == '__main__':

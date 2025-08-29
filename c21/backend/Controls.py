@@ -107,6 +107,9 @@ def emitir_reset():
 
 @socketio.on('contar_pontos')
 def dar_resultado():
+
+    vida1 = mesa.player_two.life
+    vida2 = mesa.player_one.life
     limite = mesa.limit_burst
     soma1 = sum(mesa.player_one.hand_C)
     soma2 = sum(mesa.player_two.hand_C)
@@ -114,63 +117,52 @@ def dar_resultado():
     estourou1 = soma1 > limite
     estourou2 = soma2 > limite
 
-    # Aplica penalidade visual se estourar
     if estourou1:
         mesa.player_one.hand_C.append(-limite)
-        soma1 = sum(mesa.player_one.hand_C)
+        soma1 = -(sum(mesa.player_one.hand_C))
     if estourou2:
         mesa.player_two.hand_C.append(-limite)
-        soma2 = sum(mesa.player_two.hand_C)
+        soma2 = -(sum(mesa.player_two.hand_C))
 
     # Empate absoluto
-    if not estourou1 and not estourou2 and soma1 == soma2:
+    if (not estourou1 and not estourou2) and (soma1 == soma2):
         mesa.resetar_r()
         emitir_reset()
-        sleep(1)
-        for i in ['player1', 'player2', 'player1', 'player2']:
-            dar({'request': i})
-        return
 
-    # Caso 1: apenas player1 estourou
-    if estourou1 and not estourou2:
-        vencedor = 'player2'
-    # Caso 2: apenas player2 estourou
-    elif estourou2 and not estourou1:
-        vencedor = 'player1'
-    # Caso 3: nenhum estourou — vence quem estiver mais próximo do limite
-    elif not estourou1 and not estourou2:
-        vencedor = 'player1' if (limite - soma1) < (limite - soma2) else 'player2'
-    # Caso 4: ambos estouraram — vence quem estourou menos
-    else:
-        vencedor = 'player1' if (soma1 - limite) < (soma2 - limite) else 'player2'
+        return
 
     # Aplica resultado
     mesa.resetar_r()
     dano = mesa.value_round
     mesa.value_round += 1
 
-    if vencedor == 'player1':
+    if soma1 > soma2:
         mesa.player_one.life += dano
         mesa.player_two.life -= dano
         vida1 = mesa.player_two.life
         vida2 = mesa.player_one.life
         emitir_reset()
         sleep(1)
+        start_game()
         emit('at_dano', {'dano': dano}, broadcast=True)
-        emit('diminuir_v', {'jogador': 'player2', 'vida1': vida1, 'vida2': vida2}, broadcast=True)
-    else:
+        emit('diminuir_v', {'jogador': 'player2', 'vida1': vida2, 'vida2': vida1}, broadcast=True)
+    elif soma2 > soma1:
         mesa.player_two.life += dano
         mesa.player_one.life -= dano
         vida1 = mesa.player_two.life
         vida2 = mesa.player_one.life
         emitir_reset()
         sleep(1)
+        start_game()
         emit('at_dano', {'dano': dano}, broadcast=True)
-        emit('diminuir_v', {'jogador': 'player1', 'vida1': vida1, 'vida2': vida2}, broadcast=True)
+        emit('diminuir_v', {'jogador': 'player1', 'vida1': vida2, 'vida2': vida1}, broadcast=True)
 
     # Verifica fim de jogo
-    if vida1 <= 0 or vida2 <= 0:
-        emit('finalizar_jogo', broadcast=True)
+    if mesa.player_two.life <= 0 or mesa.player_one.life <= 0:
+        print('entroooou')
+        ganhador = 'p1' if mesa.player_one.life <=0 else ''
+        ganhador = 'p2' if mesa.player_two.life <=0 else ''
+        emit('finalizar_jogo',{'ganhador':ganhador} ,broadcast=True)
 
 
 @socketio.on('u_taramp')

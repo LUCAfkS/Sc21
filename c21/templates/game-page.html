@@ -382,7 +382,6 @@ socket.on('delete_players', rmp);
         
     });
     socket.on('diminuir_v', data => {
-    if (data.jogador == 'player2') {
         if (Cookies.get('player2')) {
             document.getElementById('vida2').innerText = `💙${String(data.vida2)}`
             document.getElementById('vida1').innerText = `❤️${String(data.vida1)}`
@@ -390,7 +389,6 @@ socket.on('delete_players', rmp);
             document.getElementById('vida1').innerText = `❤️${String(data.vida2)}`
             document.getElementById('vida2').innerText = `💙${String(data.vida1)}`
         }
-    } else if (data.jogador == 'player1') {
         if (Cookies.get('player1')) {
             document.getElementById('vida1').innerText = `❤️${String(data.vida1)}`
             document.getElementById('vida2').innerText = `💙${String(data.vida2)}`
@@ -398,15 +396,15 @@ socket.on('delete_players', rmp);
             document.getElementById('vida2').innerText = `💙${String(data.vida1)}`
             document.getElementById('vida1').innerText = `❤️${String(data.vida2)}`
         }
-        }   
     })
 
     socket.on('at_dano',dado=>{
-            document.getElementById('ct1').innerText = `💣-${dado.dano}`
-            document.getElementById('ct2').innerText = `🩹+${dado.dano}`
+            document.getElementById('ct1').innerText = `💣-${dado.dano+1}`
+            document.getElementById('ct2').innerText = `🩹+${dado.dano+1}`
     })
-    socket.on('finalizar_jogo',()=>{
-        window.location.href = 'https://thaka.bing.com/th/id/OIP.1Z5dM84AUfJXMm6GIsVOyAHaFW?w=218&h=180&c=7&r=0&o=7&cb=thfvnext&pid=1.7&rm=3'
+    socket.on('finalizar_jogo',data=>{
+        if (data.ganhador == 'p2'){window.location.href ='https://thaka.bing.com/th/id/OIP.4v4VABhPKmJ7_1G5TOGwkQHaEK?w=287&h=180&c=7&r=0&o=7&pid=1.7&rm=3'}
+        if (data.ganhador == 'p1'){window.location.href ='https://thaka.bing.com/th/id/OIP.sxbTjZXs5LEdCA_6I3t9ZgHaD-?w=306&h=180&c=7&r=0&o=7&pid=1.7&rm=3'}
     })
     
 
